@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const {register, login, getCurrentUser} = require('../Controllers/UserController');
+const {register, login, getCurrentUser, getAllUsers} = require('../Controllers/UserController');
 
 // Middlewares
 const {authGuard} = require('../middlewares/authGuard');
@@ -12,6 +12,7 @@ const {authGuard} = require('../middlewares/authGuard');
 router.post('/register', register);
 router.post('/login', login);
 router.get('/profile', authGuard, getCurrentUser);
+router.get('/usuarios', authGuard, getAllUsers);
 
 
 

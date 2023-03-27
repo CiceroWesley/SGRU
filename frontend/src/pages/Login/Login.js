@@ -1,13 +1,28 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {AuthContext} from '../../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+
   // Context
   const {AuthState, setAuthState} = useContext(AuthContext);
+
+
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    const verifyUser = () => {
+      if(user){
+        navigate('/menu');
+      }
+    }
+    verifyUser()
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,14 +48,15 @@ const Login = () => {
         setError(res.errors);
       } else {
         setError('');
-        // console.log(res.token);
-        localStorage.setItem('accessToken', res.token);
-        setAuthState({
-          username: res.username,
+        console.log(res);
+        const user = {
           id: res.id,
-          status: true
-        });
-        // redirecionar para a página de menus
+          username: res.username
+        }
+        localStorage.setItem('accessToken', res.token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        navigate('/menu');
       }
 
     } catch (error) {

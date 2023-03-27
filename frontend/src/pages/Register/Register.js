@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [nome, setNome] = useState('');
@@ -9,6 +9,18 @@ const Register = () => {
   const [senha, setSenha] = useState('');
 
   const [errorR, setErrorR] = useState('')
+
+  const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    const verifyUser = () => {
+      if(user){
+        navigate('/menu');
+      }
+    }
+    verifyUser()
+  }, [user, navigate])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -39,6 +51,7 @@ const Register = () => {
       } else {
         // console.log('sem erros')
         setErrorR('');
+        navigate('/login');
       }
 
     } catch (error) {

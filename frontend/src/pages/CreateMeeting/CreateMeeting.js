@@ -1,4 +1,5 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // context
 import {AuthContext} from '../../context/AuthContext';
@@ -12,6 +13,19 @@ const CreateMeeting = () => {
     const [hora, setHora] = useState('');
     const [data, setData] = useState('');
     const [local, setLocal] = useState('');
+
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      const verifyUser = () => {
+        if(!user){
+          navigate('/login');
+        }
+      }
+      verifyUser()
+    }, [user, navigate])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -54,6 +68,8 @@ const CreateMeeting = () => {
             console.log(res.errors);
           } else{
             console.log(res);
+            // Inserir o usuário organizador da reunião como participante da reunião.
+            // Usar o token no back e pegar seu id
           }
         } catch (error) {
           console.log(error);
