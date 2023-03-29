@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 const InsertPauta = () => {
   const [meetings, setMeetings] = useState([]);
   const [meeting, setMeeting] = useState('disabled');
   const [pauta, setPauta] = useState('');
+
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
+  useEffect(() => {
+    const verifyUser = () => {
+      if(!user){
+        navigate('/login');
+      }
+    }
+    verifyUser()
+  }, [user, navigate])
 
   useEffect(() => {
     const getMeetings = async() => {

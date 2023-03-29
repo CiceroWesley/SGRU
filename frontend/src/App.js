@@ -40,7 +40,7 @@ function App() {
             <Route path='/createmeeting' exact element={<CreateMeeting/>}/>
             <Route path='/menu' exact element={<Menu/>}/>
             <Route path='/insertpauta' exact element={<InsertPauta/>}/>
-            <Route path='insertparticipante' exact element={<InsertParticipante/>} />
+            <Route path='/insertparticipante' exact element={<InsertParticipante/>} />
             
           </Routes>
           <Footer/>

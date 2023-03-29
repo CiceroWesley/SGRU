@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 const InsertParticipante = () => {
   const [meetings, setMeetings] = useState([]);
   const [meeting, setMeeting] = useState('disabled');
   const [usuarios, setUsuarios] = useState([]);
   const [usuario, setUsuario] = useState('');
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
+  useEffect(() => {
+    const verifyUser = () => {
+      if(!user){
+        navigate('/login');
+      }
+    }
+    verifyUser()
+  }, [user, navigate])
 
   useEffect(() => {
     const getMeetings = async() => {
@@ -69,9 +80,35 @@ const InsertParticipante = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(meeting)
-    console.log(usuario)
     // Inserir participante e verificar se meeting e usuario estão nulos
+    const participante = {
+      fk_id_reuniao : meeting,
+      fk_id_usuario : usuario
+    };
+
+    const token = localStorage.getItem('accessToken');
+    // post request
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify(participante),
+    };
+    requestOptions.headers.Authorization = `Bearer ${token}`;
+    try {
+      const res = await fetch('http://localhost:3000/api/meeting/participante', requestOptions)
+      .then((res) => res.json())
+      .catch((err) => err);
+
+      if(res.erros){
+        console.log(res.erros);
+      } else {
+        console.log(res);
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
+
 
   }
   return (

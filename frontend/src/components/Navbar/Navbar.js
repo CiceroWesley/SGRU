@@ -35,11 +35,17 @@ const Navbar = () => {
         </div>
         ) : (
           <div>
-          <li>
-            <Link to='/createmeeting'>Reuniões</Link>
+            <li>
+            <Link to='/menu'>Menu</Link>
           </li>
           <li>
-            <Link>Participando</Link>
+            <Link to='/createmeeting'>Criar reunião</Link>
+          </li>
+          <li>
+            <Link to='/insertpauta'>Inserir pauta</Link>
+          </li>
+          <li>
+            <Link to='/insertparticipante'>Inserir participante</Link>
           </li>
         </div>
         )}
