@@ -16,7 +16,7 @@ router.post('/', authGuard, insertMeeting);
 router.get('/fkIdOrganizador', authGuard, getMeetingByFk_Id_Organizador);
 
 // get pautas by fk_id_reuniao
-router.get('/pautas', authGuard, getPautaByFk_Id_Reuniao)
+router.get('/pautas/:id', authGuard, getPautaByFk_Id_Reuniao)
 
 // get participantes by fk_id_usuário
 // reuniões que o usuário está participando

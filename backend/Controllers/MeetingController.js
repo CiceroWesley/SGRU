@@ -90,11 +90,12 @@ const insertPauta = async (req, res) => {
 
 }
 
-// get meetings by fk_id_organizador
+// get meetings by fk_id_reuniao
 const getPautaByFk_Id_Reuniao = async (req, res) => {
   // passar pelo body ou pela url(params)?
-  const {fk_id_reuniao} = req.body;
-  const pautas = await Pauta.findAll({ where : {fk_id_reuniao}});
+  // const {fk_id_reuniao} = req.body;
+  const {id} = req.params;
+  const pautas = await Pauta.findAll({ where : {fk_id_reuniao : id}});
   // e se o pautas for vazio?
   res.status(200).json(pautas);
 }
