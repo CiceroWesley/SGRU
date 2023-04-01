@@ -20,6 +20,7 @@ import CreateMeeting from './pages/CreateMeeting/CreateMeeting';
 import Menu from './pages/Menu/Menu';
 import InsertPauta from './pages/InsertPauta/InsertPauta';
 import InsertParticipante from './pages/InsertParticipante/InsertParticipante';
+import Meeting from './pages/Meeting/Meeting';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -32,16 +33,15 @@ function App() {
       <AuthContext.Provider value={{authState, setAuthState}}>
         <BrowserRouter>
           <Navbar/>
-          {/* FAZER também a verificação da autenticação nas rotas, como no projeto do react gram */}
           <Routes>
-            <Route  path='/' exact element={<Home/>} />
+            <Route path='/' exact element={<Home/>} />
             <Route path='/login' exact element={<Login/>}/>
             <Route path='/register' exact element={<Register/>}/>
             <Route path='/createmeeting' exact element={<CreateMeeting/>}/>
             <Route path='/menu' exact element={<Menu/>}/>
             <Route path='/insertpauta' exact element={<InsertPauta/>}/>
             <Route path='/insertparticipante' exact element={<InsertParticipante/>} />
-            
+            <Route path='/meeting/:id' exact element={<Meeting />}/>
           </Routes>
           <Footer/>
         </BrowserRouter>

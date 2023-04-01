@@ -52,7 +52,7 @@ const getMeetingById = async (req ,res ) => {
     res.status(404).json({errors : ['Reunião não encontrada']});
     return;
   }
-
+  // console.log('UM')
   res.status(200).json(meeting);
 }
 

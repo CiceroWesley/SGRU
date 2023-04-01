@@ -52,7 +52,7 @@ const CreateMeeting = () => {
 
         // post request
         const token = localStorage.getItem('accessToken');
-        const requestOptions = {
+        let requestOptions = {
           method: 'POST',
           headers: {'Content-Type' : 'application/json'},
           body: JSON.stringify(meeting)
@@ -69,7 +69,45 @@ const CreateMeeting = () => {
           } else{
             console.log(res);
             // Inserir o usuário organizador da reunião como participante da reunião.
-            // Usar o token no back e pegar seu id
+            try {
+              requestOptions = {
+                method: 'GET',
+                headers: {},
+              };
+              requestOptions.headers.Authorization = `Bearer ${token}`;
+              // getting user
+              const res2 = await fetch('http://localhost:3000/api/users/profile', requestOptions)
+              .then((res2 => res2.json()))
+              .catch((err) => err);
+
+              if(res2.errors){
+                console.log(res2.errors)
+              } else {
+                const participante = {
+                  fk_id_reuniao : res.id,
+                  fk_id_usuario : res2.id
+                };
+                requestOptions = {
+                  method: 'POST',
+                  headers: {'Content-Type' : 'application/json'},
+                  body: JSON.stringify(participante),
+                };
+                requestOptions.headers.Authorization = `Bearer ${token}`;
+                // preciso utilizar o trycatch?
+                // inserindo criador da reunião como participante
+                const res3 = await fetch('http://localhost:3000/api/meeting/participante', requestOptions)
+                .then((res3) => res3.json())
+                .catch((err) => err);
+
+                if(res3.erros){
+                  console.log(res3.erros);
+                } else {
+                  console.log(res3);
+                }
+              }
+            } catch (error) {
+              console.log(error)
+            }
           }
         } catch (error) {
           console.log(error);
