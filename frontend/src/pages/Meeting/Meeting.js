@@ -6,6 +6,7 @@ const Meeting = () => {
 
     const [meeting, setMeeting] = useState();
     const [pautas, setPautas] = useState([]);
+    const [participante, setParticipante] = useState([]);
 
 
     const user = JSON.parse(localStorage.getItem('user'));
@@ -36,11 +37,11 @@ const Meeting = () => {
                 // verificar reuniões que o usuário está participando
                 // console.log(typeof res)
                 let is = false;
+                // Mudar para forEach
                 res.map((participandoReuniao) => {
-                  if(participandoReuniao.id == id){
+                  if(participandoReuniao.id === Number(id)){
                     is = true;
                   }
-                  // console.log(participandoReuniao.id == id)
                 });
                 if(!is){
                   alert('Você não pertence a essa reunião');
@@ -54,7 +55,7 @@ const Meeting = () => {
         }
       }
       verifyUser()
-    }, [user, navigate])
+    }, [user, navigate, id])
 
     // load meeting
     useEffect(() => {
@@ -99,6 +100,70 @@ const Meeting = () => {
     // verificar se usuário marcou presença ou não, se sim liberar a votação nas pautas
     // pegar usuario atual e id reunião (já tem) e verificar na tabela participantes
 
+    useEffect(() => {
+      // verificação da presença
+      const verifyPresence = async () => {
+        const token = localStorage.getItem('accessToken');
+        let requestOptions = {
+            method : 'GET',
+            headers : {},
+        };
+        requestOptions.headers.Authorization = `Bearer ${token}`;
+        try {
+          const res = await fetch(`http://localhost:3000/api/meeting/participanteRU/${id}`, requestOptions)
+          .then((res) => res.json())
+          .catch(err => err);
+
+          if(res.errors){
+            console.log(res.errors);
+          } else {
+            setParticipante(res);
+
+          }
+
+        } catch (error) {
+          console.log(error)
+        }
+        
+
+
+      };
+      verifyPresence();
+    },[id]);
+
+    const handleButton = async () => {
+      const presence = {
+        fk_id_reuniao : id,
+      };
+  
+      const token = localStorage.getItem('accessToken');
+      // post request
+      const requestOptions = {
+        method: 'PATCH',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(presence),
+      };
+      requestOptions.headers.Authorization = `Bearer ${token}`;
+      try {
+        const res = await fetch('http://localhost:3000/api/meeting/markpresence', requestOptions)
+        .then((res) => res.json())
+        .catch(err => err);
+
+        if(res.errors){
+          console.log(res.errors)
+        } else {
+          if(Number(res) === 1){
+            setParticipante({...participante, presente: true})
+          } else {
+            console.log('Erro ao marcar presença/reunião não existente');
+          }
+          
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
     return (
       <div>
         {meeting && <div>
@@ -110,9 +175,19 @@ const Meeting = () => {
         {pautas && pautas.map((pauta) => (
           <p key={pauta.id}>Pauta: {pauta.titulo}</p>
         ))}
-        <div>
-          <button>presente</button>
-        </div>
+        {participante &&
+          participante.presente ? (
+            <p>Você já marcou sua presença</p> 
+          )
+          :
+          (
+            <div>
+              <p>Você não marcou sua presença</p>
+              <button onClick={handleButton}>Marcar presença</button>
+            </div>
+          )
+        }
+        
       </div>
     )
   }

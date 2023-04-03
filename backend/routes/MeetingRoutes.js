@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao} = require('../Controllers/MeetingController');
+const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence} = require('../Controllers/MeetingController');
 
 // Middlewares
 const { authGuard } = require('../middlewares/authGuard');
@@ -26,6 +26,9 @@ router.get('/participantes', authGuard, getParticipanteByFk_Id_Usuario);
 // usuarios que estão em uma reunião
 router.get('/participantesR', authGuard, getParticipanteByFk_id_Reuniao);
 
+// get participate by fk_id_reunião e fk_id_usuario para verificação de presença
+router.get('/participanteRU/:id', authGuard, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario);
+
 // get meeting by id
 router.get('/:id', authGuard, getMeetingById);
 
@@ -37,6 +40,9 @@ router.post('/pauta', authGuard, insertPauta);
 
 // insert votacao
 router.post('/votacao', authGuard, insertVotacao);
+
+// mark presence
+router.patch('/markpresence', authGuard, markPresence);
 
 
 

@@ -161,6 +161,18 @@ const getParticipanteByFk_id_Reuniao = async (req, res) => {
   res.status(200).json(participantes);
 }
 
+const getParticipanteByFk_id_ReuniaoAndFk_id_Usuario = async (req, res) => {
+  // current user
+  const reqUser = req.user;
+  // fk_id_reunião
+  const {id} = req.params;
+
+  // participante pelo id da reunião e do usuário para verificação de presença
+  const participante = await Participante.findOne({where : {fk_id_reuniao : id, fk_id_usuario : reqUser.id}});
+
+  res.status(200).json(participante);
+}
+
 const insertVotacao = async (req, res) => {
   const {fk_id_participante, fk_id_pauta} = req.body;
 
@@ -180,6 +192,26 @@ const insertVotacao = async (req, res) => {
   res.status(201).json(newVotacao);
 }
 
+const markPresence = async (req, res) => {
+  // current user
+  const reqUser = req.user;
+  // fk_id_reunião
+  const {fk_id_reuniao} = req.body;
+
+  // participante pelo id da reunião e do usuário para marcar presença
+  const participante = await Participante.update(
+    {
+      presente: true
+    },
+    {
+      where: {fk_id_reuniao, fk_id_usuario : reqUser.id}
+    }
+  );
+
+  res.status(200).json(participante);
+}
+
+
 // CONTINUAR
 const getVotacaoByFkIdPauta = async (req, res) => {
 
@@ -188,4 +220,4 @@ const getVotacaoByFkIdPauta = async (req, res) => {
 
 // VER os gets que faltam das chaves estrangeiras das outras tabelas.
 
-module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao};
+module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence};
