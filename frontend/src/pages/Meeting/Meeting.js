@@ -39,10 +39,11 @@ const Meeting = () => {
                 let is = false;
                 // Mudar para forEach
                 res.map((participandoReuniao) => {
-                  if(participandoReuniao.id === Number(id)){
+                  if(participandoReuniao.fk_id_reuniao === Number(id)){
                     is = true;
                   }
                 });
+                // console.log(res)
                 if(!is){
                   alert('Você não pertence a essa reunião');
                   navigate('/menu');
@@ -130,7 +131,7 @@ const Meeting = () => {
       };
       verifyPresence();
     },[id]);
-
+    // marcar presenca
     const handleButton = async () => {
       const presence = {
         fk_id_reuniao : id,
@@ -156,10 +157,8 @@ const Meeting = () => {
             setParticipante({...participante, presente: true})
           } else {
             console.log('Erro ao marcar presença/reunião não existente');
-          }
-          
+          } 
         }
-
       } catch (error) {
         console.log(error)
       }
@@ -172,9 +171,17 @@ const Meeting = () => {
           <p>Local: {meeting.local}</p>
           <p>Data e horário: {meeting.data}</p>
         </div>}
-        {pautas && pautas.map((pauta) => (
-          <p key={pauta.id}>Pauta: {pauta.titulo}</p>
-        ))}
+        {participante &&
+          participante.presente ? (
+            pautas && pautas.map((pauta) => (
+              <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+            ))
+          )
+          :
+          (
+            <p>Marque a presença para visualizar as pautas.</p>
+          )
+        }
         {participante &&
           participante.presente ? (
             <p>Você já marcou sua presença</p> 
@@ -187,7 +194,7 @@ const Meeting = () => {
             </div>
           )
         }
-        
+        <div>Pegar participantes da reunião</div>
       </div>
     )
   }

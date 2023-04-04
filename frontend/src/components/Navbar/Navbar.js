@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 // context
 import { AuthContext } from '../../context/AuthContext';
 
@@ -9,6 +9,7 @@ import { NavLink, Link } from 'react-router-dom';
 
 const Navbar = () => {
   const {authState, setAuthState} = useContext(AuthContext);
+  const navigate = useNavigate();
   // const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const user = JSON.parse(localStorage.getItem('user'));
   // useEffect(() => {
@@ -17,6 +18,10 @@ const Navbar = () => {
   //   }
   //   verifyUser()
   // }, [user])
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/')
+  }
 
   return (
     <nav>
@@ -46,6 +51,10 @@ const Navbar = () => {
           </li>
           <li>
             <Link to='/insertparticipante'>Inserir participante</Link>
+          </li>
+          <li>
+            <p>{user.username}</p>
+            <button onClick={handleLogout}>Sair</button>
           </li>
         </div>
         )}
