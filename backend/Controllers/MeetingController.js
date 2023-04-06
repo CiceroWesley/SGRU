@@ -152,11 +152,12 @@ const getParticipanteByFk_Id_Usuario = async (req, res) => {
   res.status(200).json(participantes);
 }
 
+// participantes de um reunião
 const getParticipanteByFk_id_Reuniao = async (req, res) => {
-  const {fk_id_reuniao} = req.body;
+  const {id} = req.params;
 
   // participantes pelo id da reunião
-  const participantes = await Participante.findAll({where : {fk_id_reuniao}});
+  const participantes = await Participante.findAll({where : {fk_id_reuniao : id}});
 
   res.status(200).json(participantes);
 }

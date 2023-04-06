@@ -7,6 +7,7 @@ const Meeting = () => {
     const [meeting, setMeeting] = useState();
     const [pautas, setPautas] = useState([]);
     const [participante, setParticipante] = useState([]);
+    const [participantes, setParticipantes] = useState([]);
 
 
     const user = JSON.parse(localStorage.getItem('user'));
@@ -131,6 +132,50 @@ const Meeting = () => {
       };
       verifyPresence();
     },[id]);
+
+    // get participantes da reunião
+    useEffect(() => {
+      const getParticipantes = async () => {
+        const token = localStorage.getItem('accessToken');
+        const requestOptions = {
+          method : 'GET',
+          headers : {},
+        };
+        requestOptions.headers.Authorization = `Bearer ${token}`;
+        try {
+          const res = await fetch(`http://localhost:3000/api/meeting/participantesR/${id}`, requestOptions)
+          .then((res) => res.json())
+          .catch(err => err);
+
+          if(res.errors){
+            console.log(res.errors); 
+          } else {
+            console.log(res);
+            res.forEach(async (participante) => {
+              // console.log(participante)
+              const res2 = await fetch(`http://localhost:3000/api/users/usuario/${participante.fk_id_usuario}`, requestOptions)
+              .then((res2) => res2.json())
+              .catch(err => err);
+
+              if(res2.errors){
+                console.log(res2.errors);
+              } else {
+                console.log(res2)
+                setParticipantes((prevParticipantes) => [...prevParticipantes, res2]);
+              }
+              
+            });
+          }
+
+        } catch (error) {
+          console.log(error)
+        }
+
+      };
+      getParticipantes();
+    }, [id])
+
+
     // marcar presenca
     const handleButton = async () => {
       const presence = {
@@ -194,7 +239,13 @@ const Meeting = () => {
             </div>
           )
         }
-        <div>Pegar participantes da reunião</div>
+        <div>
+          <span>Participantes da reunião:</span>
+          {participantes && participantes.map((participante) => (
+            <p key={participante.id}>{participante.nome}</p>
+          ))}
+
+        </div>
       </div>
     )
   }

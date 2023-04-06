@@ -103,6 +103,9 @@ const InsertParticipante = () => {
         console.log(res.erros);
       } else {
         console.log(res);
+        // fazer um map para a quantidade de pautas da reunião e para cada pauta inserir o participante que foi retornado acima
+        // pelo id da reunião pegar todas as pautas
+        // para cada pauta inserir o id participante
       }
       
     } catch (error) {

@@ -24,7 +24,7 @@ router.get('/participantes', authGuard, getParticipanteByFk_Id_Usuario);
 
 // get participantes by fk_id_reuniao
 // usuarios que estão em uma reunião
-router.get('/participantesR', authGuard, getParticipanteByFk_id_Reuniao);
+router.get('/participantesR/:id', authGuard, getParticipanteByFk_id_Reuniao);
 
 // get participate by fk_id_reunião e fk_id_usuario para verificação de presença
 router.get('/participanteRU/:id', authGuard, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario);
