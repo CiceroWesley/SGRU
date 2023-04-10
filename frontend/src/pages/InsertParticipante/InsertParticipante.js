@@ -9,6 +9,10 @@ const InsertParticipante = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
+
+  // inserir o organizador da reunião automaticamente como participante
+  // se deixar inserindo no createmeeting, o participante com suas pautas não são inseridos no votação
+  // verificar se o organizador/usuário atual tem um id na tabela participante, se sim não insere denovo e se não inserir o usuário como participante da reunião que foi selecionada
   useEffect(() => {
     const verifyUser = () => {
       if(!user){
@@ -88,7 +92,7 @@ const InsertParticipante = () => {
 
     const token = localStorage.getItem('accessToken');
     // post request
-    const requestOptions = {
+    let requestOptions = {
       method: 'POST',
       headers: {'Content-Type' : 'application/json'},
       body: JSON.stringify(participante),
@@ -99,13 +103,53 @@ const InsertParticipante = () => {
       .then((res) => res.json())
       .catch((err) => err);
 
-      if(res.erros){
-        console.log(res.erros);
+      if(res.errors){
+        console.log(res.errors);
+        return;
       } else {
-        console.log(res);
+        // console.log(res);
         // fazer um map para a quantidade de pautas da reunião e para cada pauta inserir o participante que foi retornado acima
         // pelo id da reunião pegar todas as pautas
         // para cada pauta inserir o id participante
+        requestOptions = {
+          method: 'GET',
+          headers: {},
+        };
+        requestOptions.headers.Authorization = `Bearer ${token}`;
+        // pautas
+        const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${meeting}`, requestOptions)
+        .then((res2) => res2.json())
+        .catch(err => err);
+
+        if(res2.errors){
+          console.log(res2.errors);
+        } else {
+          // console.log(res2)
+          res2.forEach(async (pauta) => {
+            console.log(pauta)
+            const votacao = {
+              fk_id_participante : res.id,
+              fk_id_pauta : pauta.id
+            };
+
+            requestOptions = {
+              method: 'POST',
+              headers: {'Content-Type' : 'application/json'},
+              body: JSON.stringify(votacao),
+            };
+            requestOptions.headers.Authorization = `Bearer ${token}`;
+
+            const res3 = await fetch('http://localhost:3000/api/meeting/votacao', requestOptions)
+            .then((res3) => res3.json())
+            .catch(err => err);
+
+            if(res3.errors){
+              console.log(res3.errors);
+            } else {
+              console.log(res3);
+            }
+          });
+        }
       }
       
     } catch (error) {
@@ -116,6 +160,7 @@ const InsertParticipante = () => {
   }
   return (
     <div>
+      {/* Antes de inserir os participantes se certificar que todas as pautas foram cadastradas */}
       <h2>Insira os participantes</h2>
       <form onSubmit={handleSubmit}>
         <label>

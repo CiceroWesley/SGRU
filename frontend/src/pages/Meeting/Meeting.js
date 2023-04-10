@@ -9,6 +9,10 @@ const Meeting = () => {
     const [participante, setParticipante] = useState([]);
     const [participantes, setParticipantes] = useState([]);
 
+    const [pauta, setPauta] = useState();
+
+
+
 
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
@@ -150,7 +154,7 @@ const Meeting = () => {
           if(res.errors){
             console.log(res.errors); 
           } else {
-            console.log(res);
+            // console.log(res);
             res.forEach(async (participante) => {
               // console.log(participante)
               const res2 = await fetch(`http://localhost:3000/api/users/usuario/${participante.fk_id_usuario}`, requestOptions)
@@ -160,7 +164,7 @@ const Meeting = () => {
               if(res2.errors){
                 console.log(res2.errors);
               } else {
-                console.log(res2)
+                // console.log(res2)
                 setParticipantes((prevParticipantes) => [...prevParticipantes, res2]);
               }
               
@@ -208,6 +212,47 @@ const Meeting = () => {
         console.log(error)
       }
     }
+
+    // votação
+    const handleButtonVote = async (pautaId, vote) => {
+      // console.log(pautaId);
+      // console.log(vote)
+
+      const votePauta = {
+        fk_id_participante : participante.id,
+        fk_id_pauta : pautaId,
+        voto : vote
+      };
+
+      const token = localStorage.getItem('accessToken');
+      const requestOptions = {
+        method : 'PATCH',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(votePauta)
+      };
+      requestOptions.headers.Authorization = `Bearer ${token}`;
+
+      try {
+        const res = await fetch('http://localhost:3000/api/meeting/vote', requestOptions)
+        .then((res) => res.json())
+        .catch(err => err);
+
+        if(res.errors){
+          console.log(res.errors);
+        } else {
+          console.log(res);
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }  
+    // atentar-se a ordem, criar reunião, inserir pautas e por fim inserir participantes
+
+    // verificar se a reunião foi finalizada se sim, mostrar o resumo da reunião
+    // com descrição, titulo, local e horario
+    // as pautas com o resultado da voltação
+    // os participantes e a presença
+    // partes dos dados que já estão podem se reaproveitados
     return (
       <div>
         {meeting && <div>
@@ -219,7 +264,11 @@ const Meeting = () => {
         {participante &&
           participante.presente ? (
             pautas && pautas.map((pauta) => (
-              <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+              <div>
+                <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+                <button onClick={() => handleButtonVote(pauta.id, 1)}>A favor</button>
+                <button onClick={() => handleButtonVote(pauta.id, 0)}>Contra</button>
+              </div>
             ))
           )
           :

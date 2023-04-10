@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence} = require('../Controllers/MeetingController');
+const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote} = require('../Controllers/MeetingController');
 
 // Middlewares
 const { authGuard } = require('../middlewares/authGuard');
@@ -43,6 +43,9 @@ router.post('/votacao', authGuard, insertVotacao);
 
 // mark presence
 router.patch('/markpresence', authGuard, markPresence);
+
+// vote
+router.patch('/vote', authGuard, vote);
 
 
 

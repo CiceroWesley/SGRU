@@ -95,15 +95,15 @@ const CreateMeeting = () => {
                 requestOptions.headers.Authorization = `Bearer ${token}`;
                 // preciso utilizar o trycatch?
                 // inserindo criador da reunião como participante
-                const res3 = await fetch('http://localhost:3000/api/meeting/participante', requestOptions)
-                .then((res3) => res3.json())
-                .catch((err) => err);
+                // const res3 = await fetch('http://localhost:3000/api/meeting/participante', requestOptions)
+                // .then((res3) => res3.json())
+                // .catch((err) => err);
 
-                if(res3.erros){
-                  console.log(res3.erros);
-                } else {
-                  console.log(res3);
-                }
+                // if(res3.erros){
+                //   console.log(res3.erros);
+                // } else {
+                //   console.log(res3);
+                // }
               }
             } catch (error) {
               console.log(error)
