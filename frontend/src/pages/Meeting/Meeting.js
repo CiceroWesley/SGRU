@@ -8,6 +8,7 @@ const Meeting = () => {
     const [pautas, setPautas] = useState([]);
     const [participante, setParticipante] = useState([]);
     const [participantes, setParticipantes] = useState([]);
+    const [votacao, setVotacao] = useState([]);
 
     const [pauta, setPauta] = useState();
 
@@ -246,6 +247,53 @@ const Meeting = () => {
         console.log(error)
       }
     }  
+
+    useEffect(() => {
+      const getVotes = async () => {
+        const token = localStorage.getItem('accessToken');
+
+        const requestOptions = {
+          method : 'GET',
+          headers : {}
+        };
+        requestOptions.headers.Authorization = `Bearer ${token}`;
+        try {
+          pautas.forEach(async (pauta) => {
+            const res = await fetch(`http://localhost:3000/api/meeting/votes/${pauta.id}`, requestOptions)
+            .then((res) => res.json())
+            .catch(err => err);
+
+            if(res.errors){
+              console.log(res.errors);
+            } else {
+              // aparentemente está funcionando, verificar direito e mostrar o estado com o map
+              const pautaVoto = {
+                id : pauta.id,
+                titulo : pauta.titulo,
+                abs : res.votacaoAbs,
+                afa : res.votacaoAfa,
+                con : res.votacaoCon
+              }
+                // console.log(pautaVoto)
+                setVotacao((prevVotacao) => [...prevVotacao, pautaVoto]);
+              
+              // console.log(res)
+              
+            }
+          })
+        } catch (error) {
+          console.log(error)
+        }
+
+
+      };
+      if(meeting.finalizado){
+        getVotes();
+      }
+    }, [pautas, meeting]);
+
+
+
     // atentar-se a ordem, criar reunião, inserir pautas e por fim inserir participantes
 
     // verificar se a reunião foi finalizada se sim, mostrar o resumo da reunião
@@ -253,6 +301,7 @@ const Meeting = () => {
     // as pautas com o resultado da voltação
     // os participantes e a presença
     // partes dos dados que já estão podem se reaproveitados
+    // console.log(votacao)
     return (
       <div>
         {meeting && <div>
@@ -261,8 +310,9 @@ const Meeting = () => {
           <p>Local: {meeting.local}</p>
           <p>Data e horário: {meeting.data}</p>
         </div>}
-        {participante &&
-          participante.presente ? (
+        
+        {meeting && !meeting.finalizado ? (
+          participante && participante.presente ? (
             pautas && pautas.map((pauta) => (
               <div>
                 <p key={pauta.id}>Pauta: {pauta.titulo}</p>
@@ -275,7 +325,24 @@ const Meeting = () => {
           (
             <p>Marque a presença para visualizar as pautas.</p>
           )
-        }
+        ) : (
+          // caso a reunião já esteja finalizada, exibir a quantidade de votos em cada pauta
+          <div>
+            <p>Essa reunião foi finalizada, veja a votação nas pautas:</p>
+            {votacao && votacao.map((pauta) => (
+              <div>
+                <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+                <ul>
+                  <li>Votos a favor {pauta.afa}</li>
+                  <li>Votos contra {pauta.con}</li>
+                  <li>Abstinência {pauta.abs}</li>
+                </ul>
+              </div>
+            ))}
+          </div>
+          
+        )}
+        
         {participante &&
           participante.presente ? (
             <p>Você já marcou sua presença</p> 

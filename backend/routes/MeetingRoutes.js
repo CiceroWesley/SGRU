@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote} = require('../Controllers/MeetingController');
+const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting} = require('../Controllers/MeetingController');
 
 // Middlewares
 const { authGuard } = require('../middlewares/authGuard');
@@ -32,6 +32,9 @@ router.get('/participanteRU/:id', authGuard, getParticipanteByFk_id_ReuniaoAndFk
 // get meeting by id
 router.get('/:id', authGuard, getMeetingById);
 
+// get votacao by fk_id_pauta
+router.get('/votes/:id', authGuard, getVotacaoByFkIdPauta);
+
 // insert participante
 router.post('/participante', authGuard, insertParticipante);
 
@@ -46,6 +49,9 @@ router.patch('/markpresence', authGuard, markPresence);
 
 // vote
 router.patch('/vote', authGuard, vote);
+
+// finalizeMeeting
+router.patch('/finalize', authGuard, finalizeMeeting);
 
 
 

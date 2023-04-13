@@ -21,6 +21,7 @@ import Menu from './pages/Menu/Menu';
 import InsertPauta from './pages/InsertPauta/InsertPauta';
 import InsertParticipante from './pages/InsertParticipante/InsertParticipante';
 import Meeting from './pages/Meeting/Meeting';
+import MeetingOrganizador from './pages/MeetingOrganizador/MeetingOrganizador';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -42,6 +43,7 @@ function App() {
             <Route path='/insertpauta' exact element={<InsertPauta/>}/>
             <Route path='/insertparticipante' exact element={<InsertParticipante/>} />
             <Route path='/meeting/:id' exact element={<Meeting />}/>
+            <Route path='/meetingorg/:id' exact element={<MeetingOrganizador />}/>
           </Routes>
           <Footer/>
         </BrowserRouter>

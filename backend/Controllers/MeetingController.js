@@ -228,17 +228,49 @@ const vote = async (req, res) => {
   );
 
   res.status(200).json(votacao);
-
-
 }
 
+const finalizeMeeting  = async (req, res) => {
+  // current user
+  const reqUser = req.user;
 
-// CONTINUAR
+  const {id} = req.body;
+
+  const meeting = await Reuniao.update(
+    {
+      finalizado : true
+    },
+    {
+      where: {fk_id_organizador : reqUser.id, id}
+    }
+  );
+
+  res.status(200).json(meeting)
+}
+
 const getVotacaoByFkIdPauta = async (req, res) => {
 
-  const {fk_id_pauta} = req.body;
+  const {id} = req.params;
+
+  // abstinencia
+  const votacaoAbs = await Votacao.count({where : {fk_id_pauta : id, voto : 3}});
+
+  // a favor
+  const votacaoAfa = await Votacao.count({where : {fk_id_pauta : id, voto : 1}});
+
+  // contra
+  const votacaoCon = await Votacao.count({where : {fk_id_pauta : id, voto : 0}});
+
+
+  res.status(200).json({
+    votacaoAbs,
+    votacaoAfa,
+    votacaoCon
+  }
+  );
+
 }
 
 // VER os gets que faltam das chaves estrangeiras das outras tabelas.
 
-module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote};
+module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting};
