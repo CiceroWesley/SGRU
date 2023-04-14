@@ -36,7 +36,7 @@ const CreateMeeting = () => {
         // Verificação se a data e horário inseridos não passaram
         const date = new Date();
         if(date.getTime() > Date.parse(dataHorario)){
-            console.log('ess horario e data ja passaram')
+            console.log('esse horario e data ja passaram')
             // console.log(date.getTime())
             // console.log(Date.parse(dataHorario))
             // SETAR ERRO e RETONAR
@@ -69,6 +69,7 @@ const CreateMeeting = () => {
           } else{
             console.log(res);
             // Inserir o usuário organizador da reunião como participante da reunião.
+            // Pensar outra solução ^
             try {
               requestOptions = {
                 method: 'GET',

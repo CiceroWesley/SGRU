@@ -287,7 +287,7 @@ const Meeting = () => {
 
 
       };
-      if(meeting.finalizado){
+      if(meeting && meeting.finalizado){
         getVotes();
       }
     }, [pautas, meeting]);

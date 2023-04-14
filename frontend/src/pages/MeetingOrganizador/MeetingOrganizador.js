@@ -4,6 +4,14 @@ import { useParams, useNavigate } from "react-router-dom"
 const MeetingOrganizador = () => {
   const {id} = useParams();
 
+
+  const [titulo, setTitulo] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [local, setLocal] = useState('');
+  const [data, setData] = useState('');
+  const [hora, setHora] = useState('');
+
+
   const [meeting, setMeeting] = useState();
   const [pautas, setPautas] = useState([]);
 
@@ -76,6 +84,14 @@ const MeetingOrganizador = () => {
                 console.log(res.erros);
             } else{
                 setMeeting(res);
+                // console.log(res.data.slice(11, 16))
+                setTitulo(res.titulo);
+                setDescricao(res.descricao);
+                setLocal(res.local);
+                setData(res.data.slice(0,10));
+                setHora(res.data.slice(11, 16))
+                
+                
 
                 // getting pautas
                 const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${res.id}`, requestOptions)
@@ -130,20 +146,117 @@ const MeetingOrganizador = () => {
     }
   }
 
+  // update meeting
+  // A edição está funcionando, porém, a hora não fica a que o usuário está definindo
+  // A hora está sendo definida como a hora que o usuário setou + 3, não sei porque.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const dataHorario = `${data} ${hora}:00`;
+    console.log(dataHorario)
+    // Verificação se a data e horário inseridos não passaram
+    const date = new Date();
+    if(date.getTime() > Date.parse(dataHorario)){
+        console.log('esse horario e data ja passaram')
+        // console.log(date.getTime())
+        // console.log(Date.parse(dataHorario))
+        // SETAR ERRO e RETONAR
+        return;
+    }
+
+    const meeting = {
+        titulo,
+        descricao,
+        data : dataHorario,
+        local
+    };
+
+    const token = localStorage.getItem('accessToken');
+
+    const requestOptions = {
+      method : 'PATCH',
+      headers : {'Content-Type' : 'application/json'},
+      body : JSON.stringify(meeting)
+    };
+    requestOptions.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+      .then((res) => res.json())
+      .catch(err => err);
+
+      if(res.errors){
+        console.log(res.errors)
+      } else {
+        if(Number(res) === 1){
+          console.log('Edição realizada com sucesso');
+        } else {
+          console.log('Erro ao editar os dados');
+        }
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+
+  const handleDoubleClick = async (pautaId) => {
+    console.log(pautaId)
+
+    const novoTitulo = prompt('Insira o novo nome:')
+
+    if(novoTitulo === ''){
+      console.log('Vázio')
+    }
+    console.log(typeof novoTitulo)
+  }
+
   return (
     <div>
-      {meeting && <div>
+      <h2>Edite os dados da reunião</h2>
+      {/* bloquear a edição caso esteja finalizada */}
+      {/* criar rota put para edição da reunião */}
+      {/* ver como editar as pautas */}
+      {/* Caso não encontrar outra solução, fazer uma página só para editar a pauta indidualmente, sendo encaminhado por essa página */}
+      <form onSubmit={handleSubmit}>
+        <label>
+          <span>Título:</span>
+          <input type="text" placeholder="Título" onChange={(e) => setTitulo(e.target.value)} value={titulo || ''} />
+        </label>
+        <label>
+          <span>Descrição:</span>
+          <textarea placeholder="Descrição" onChange={(e) => setDescricao(e.target.value)} value={descricao || ''}></textarea>
+        </label>
+        <label>
+          <span>Local:</span>
+          <input type="text" placeholder="Local" onChange={(e) => setLocal(e.target.value)} value={local} />
+        </label>
+        <label>
+          <span>Data:</span>
+          <input type="date" onChange={(e) => setData(e.target.value)} value={data}/>
+        </label>
+        <label>
+          <span>Horário:</span>
+          <input type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
+        </label>
+        <input type="submit" value='Editar'/>
+      </form>
+      {/* {meeting && <div>
           <h2>{meeting.titulo}</h2>
           <p>Descrição: {meeting.descricao}</p>
           <p>Local: {meeting.local}</p>
           <p>Data e horário: {meeting.data}</p>
-        </div>}
+        </div>} */}
 
         {meeting && !meeting.finalizado ? (
           <div>
             {pautas && pautas.map((pauta) => (
             <div>
-              <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+              <p onDoubleClick={() => handleDoubleClick(pauta.id)} key={pauta.id}>Pauta: {pauta.titulo}</p>
+              {/* <input type="text" value={pauta.titulo} onDoubleClick={handleDoubleClick} /> */}
             </div>
             ))}
             <div>

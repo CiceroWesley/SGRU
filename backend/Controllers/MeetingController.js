@@ -271,6 +271,25 @@ const getVotacaoByFkIdPauta = async (req, res) => {
 
 }
 
+const updateMeeting = async (req, res) => {
+  const {id} = req.params;
+  const {titulo, descricao, data, local} = req.body;
+  // console.log(data)
+  const meeting = await Reuniao.update(
+    {
+      titulo,
+      descricao,
+      data,
+      local
+    },
+    {
+      where : {id}
+    }
+  );
+
+  res.status(200).json(meeting);
+};
+
 // VER os gets que faltam das chaves estrangeiras das outras tabelas.
 
-module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting};
+module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting};
