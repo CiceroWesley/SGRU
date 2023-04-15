@@ -58,7 +58,8 @@ const Menu = () => {
               const reuniao = {
                 id: res2.id,
                 titulo: res2.titulo,
-                data: res2.data
+                data: res2.data,
+                finalizado: res2.finalizado
               };
               setMeetings((prevMeetings) => [...prevMeetings, reuniao])
             }
@@ -110,7 +111,11 @@ const Menu = () => {
           {/* O useEffect está rodando duas vezes, se desativar o Strict Mode resolve. Contudo, não existe outra solução?  */}
           {meetings && meetings.map((reuniao) => (
             <div>
-              <p key={reuniao.id}>{reuniao.titulo}</p>
+              {reuniao.finalizado ? (
+                <p key={reuniao.id}>{reuniao.titulo} (finalizada)</p>  
+              ) : (
+                <p key={reuniao.id}>{reuniao.titulo}</p>  
+              )}
               <Link to={`/meeting/${reuniao.id}`}>Acessar reunião</Link>
             </div>
           ))}

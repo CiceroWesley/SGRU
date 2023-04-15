@@ -351,7 +351,8 @@ const Meeting = () => {
           (
             <div>
               <p>Você não marcou sua presença</p>
-              <button onClick={handleButton}>Marcar presença</button>
+              {meeting && !meeting.finalizado && <button onClick={handleButton}>Marcar presença</button>}
+              
             </div>
           )
         }

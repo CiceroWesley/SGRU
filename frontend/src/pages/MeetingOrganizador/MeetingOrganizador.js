@@ -204,46 +204,69 @@ const MeetingOrganizador = () => {
 
 
   const handleDoubleClick = async (pautaId) => {
-    console.log(pautaId)
+    // console.log(pautaId)
 
-    const novoTitulo = prompt('Insira o novo nome:')
-
-    if(novoTitulo === ''){
+    const novoTitulo = prompt('Insira o novo título:')
+    
+    if(novoTitulo === '' || novoTitulo === null){
       console.log('Vázio')
+      return;
     }
-    console.log(typeof novoTitulo)
+    // console.log('teste')
+    const title = {
+      titulo : novoTitulo
+    };
+
+    const token = localStorage.getItem('accessToken');
+
+    const requestOptions = {
+      method : 'PATCH',
+      headers : {'Content-Type' : 'application/json'},
+      body : JSON.stringify(title)
+    };
+    requestOptions.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/meeting/pauta/${pautaId}`, requestOptions)
+      .then((res) => res.json())
+      .catch(err => err);
+
+      if(res.errors){
+        console.log(res.errors)
+      } else {
+        if(Number(res) === 1){
+          console.log('Pauta atualizada com sucesso');
+          // console.log(pautas)
+
+          let atualizado = pautas.map((paut) => {
+            if(paut.id == pautaId){
+              console.log(paut.titulo)
+              paut.titulo = novoTitulo
+              return paut
+            }
+            return paut
+          })
+          // const pautaAtualizadaId = pautas.findIndex((pauta) => pauta.id == pautaId);
+          // let pautasUpdate = pautas;
+          // pautasUpdate[pautaAtualizadaId].titulo = novoTitulo;
+          // console.log(atualizado)
+          setPautas(atualizado);
+        }
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 
+  console.log(pautas)
   return (
     <div>
       <h2>Edite os dados da reunião</h2>
       {/* bloquear a edição caso esteja finalizada */}
-      {/* criar rota put para edição da reunião */}
-      {/* ver como editar as pautas */}
-      {/* Caso não encontrar outra solução, fazer uma página só para editar a pauta indidualmente, sendo encaminhado por essa página */}
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>Título:</span>
-          <input type="text" placeholder="Título" onChange={(e) => setTitulo(e.target.value)} value={titulo || ''} />
-        </label>
-        <label>
-          <span>Descrição:</span>
-          <textarea placeholder="Descrição" onChange={(e) => setDescricao(e.target.value)} value={descricao || ''}></textarea>
-        </label>
-        <label>
-          <span>Local:</span>
-          <input type="text" placeholder="Local" onChange={(e) => setLocal(e.target.value)} value={local} />
-        </label>
-        <label>
-          <span>Data:</span>
-          <input type="date" onChange={(e) => setData(e.target.value)} value={data}/>
-        </label>
-        <label>
-          <span>Horário:</span>
-          <input type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
-        </label>
-        <input type="submit" value='Editar'/>
-      </form>
+      
       {/* {meeting && <div>
           <h2>{meeting.titulo}</h2>
           <p>Descrição: {meeting.descricao}</p>
@@ -253,6 +276,29 @@ const MeetingOrganizador = () => {
 
         {meeting && !meeting.finalizado ? (
           <div>
+            <form onSubmit={handleSubmit}>
+              <label>
+                <span>Título:</span>
+                <input type="text" placeholder="Título" onChange={(e) => setTitulo(e.target.value)} value={titulo || ''} />
+              </label>
+              <label>
+                <span>Descrição:</span>
+                <textarea placeholder="Descrição" onChange={(e) => setDescricao(e.target.value)} value={descricao || ''}></textarea>
+              </label>
+              <label>
+                <span>Local:</span>
+                <input type="text" placeholder="Local" onChange={(e) => setLocal(e.target.value)} value={local} />
+              </label>
+              <label>
+                <span>Data:</span>
+                <input type="date" onChange={(e) => setData(e.target.value)} value={data}/>
+              </label>
+              <label>
+                <span>Horário:</span>
+                <input type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
+              </label>
+              <input type="submit" value='Editar'/>
+            </form>
             {pautas && pautas.map((pauta) => (
             <div>
               <p onDoubleClick={() => handleDoubleClick(pauta.id)} key={pauta.id}>Pauta: {pauta.titulo}</p>

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting} = require('../Controllers/MeetingController');
+const { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting, updateTitlePauta} = require('../Controllers/MeetingController');
 
 // Middlewares
 const { authGuard } = require('../middlewares/authGuard');
@@ -55,6 +55,9 @@ router.patch('/finalize', authGuard, finalizeMeeting);
 
 // updateMeeting
 router.patch('/:id', authGuard, updateMeeting);
+
+// update titulo da pauta
+router.patch('/pauta/:id', authGuard, updateTitlePauta);
 
 
 
