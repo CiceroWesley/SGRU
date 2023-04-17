@@ -126,8 +126,18 @@ const Menu = () => {
         <div>
           {meetingsOrg && meetingsOrg.map((reuniaoOrg) => (
             <div>
-              <p key={reuniaoOrg.id}>{reuniaoOrg.titulo}</p>
-              <Link to={`/meetingorg/${reuniaoOrg.id}`}>Acessar reunião</Link>
+              {reuniaoOrg.finalizado ? (
+                <div>
+                  <p key={reuniaoOrg.id}>{reuniaoOrg.titulo} (finalizada)</p>
+                  <Link to={`/meetingorg/${reuniaoOrg.id}`}>Acessar reunião</Link>
+                </div>
+              ) : (
+                <div>
+                  <p key={reuniaoOrg.id}>{reuniaoOrg.titulo}</p>
+                  <Link to={`/meetingorg/${reuniaoOrg.id}`}>Acessar reunião</Link>
+                </div>
+              )}
+              
             </div>
           ))}
         </div>

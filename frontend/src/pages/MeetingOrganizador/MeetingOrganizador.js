@@ -188,6 +188,7 @@ const MeetingOrganizador = () => {
       if(res.errors){
         console.log(res.errors)
       } else {
+        console.log(res)
         if(Number(res) === 1){
           console.log('Edição realizada com sucesso');
         } else {

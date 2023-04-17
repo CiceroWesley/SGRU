@@ -89,7 +89,11 @@ const InsertPauta = () => {
     }
 
   }
-
+  // Não é possivel adicionar mais pautas depois de pelo menos um usuário ser adicionado como participante
+  // Ao inserir pauta verificar se ja existe um participante (id da reuniao) na reuniao se sim, não deixar inserir outra pauta e pedir para excluir a reunião e criar outra
+  // caso nao tenha nenhum participante permitir a inclusão da outra pauta
+  // não é possível excluir pauta
+  // Inserir um campo resolução para o organizador do encontro e permitir ele adicionar separado da edição da reunião.
   return (
     <div>
       <h2>Insira suas pautas</h2>

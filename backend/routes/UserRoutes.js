@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const {register, login, getCurrentUser, getAllUsers, getUserById} = require('../Controllers/UserController');
+const {register, login, getCurrentUser, getAllUsers, getUserById, editProfile} = require('../Controllers/UserController');
 
 // Middlewares
 const {authGuard} = require('../middlewares/authGuard');
@@ -14,6 +14,7 @@ router.post('/login', login);
 router.get('/profile', authGuard, getCurrentUser);
 router.get('/usuarios', authGuard, getAllUsers);
 router.get('/usuario/:id', authGuard, getUserById);
+router.patch('/edit', authGuard, editProfile);
 
 
 

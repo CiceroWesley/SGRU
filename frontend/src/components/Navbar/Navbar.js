@@ -53,7 +53,7 @@ const Navbar = () => {
             <Link to='/insertparticipante'>Inserir participante</Link>
           </li>
           <li>
-            <p>{user.username}</p>
+            <Link to='/editprofile'>{user.username}</Link>
             <button onClick={handleLogout}>Sair</button>
           </li>
         </div>

@@ -98,4 +98,30 @@ const getUserById = async (req, res) => {
     res.status(200).json(usuario);
 }
 
-module.exports = { register, login, getCurrentUser, getAllUsers, getUserById };
+// edit profile
+const editProfile = async (req, res) => {
+    const {nome, email, cargo, senha} = req.body;
+
+    // current user
+    const reqUser = req.user;
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(senha, salt);
+
+    // update user
+    const usuario = await Usuario.update(
+        {
+            nome,
+            email,
+            cargo,
+            senha : passwordHash
+        },
+        {
+            where : {id : reqUser.id}
+        }
+    );    
+
+    res.status(200).json(usuario);
+
+}
+
+module.exports = { register, login, getCurrentUser, getAllUsers, getUserById, editProfile };

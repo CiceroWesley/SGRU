@@ -117,6 +117,7 @@ const Meeting = () => {
         };
         requestOptions.headers.Authorization = `Bearer ${token}`;
         try {
+          // usuário atual
           const res = await fetch(`http://localhost:3000/api/meeting/participanteRU/${id}`, requestOptions)
           .then((res) => res.json())
           .catch(err => err);
@@ -302,6 +303,10 @@ const Meeting = () => {
     // os participantes e a presença
     // partes dos dados que já estão podem se reaproveitados
     // console.log(votacao)
+
+
+    // Não é possivel adicionar mais pautas depois de pelo menos um usuário ser adicionado como participante
+    // Ao inserir pauta verificar se ja existe um participante (id da reuniao) na reuniao se sim, não deixar inserir outra pauta e pedir para excluir a reunião e criar outra
     return (
       <div>
         {meeting && <div>
