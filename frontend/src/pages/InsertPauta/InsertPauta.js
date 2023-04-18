@@ -56,13 +56,41 @@ const InsertPauta = () => {
       console.log('selecione uma reunião');
       return;
     }
+    // verificar se usuários já estão nessa reunião que se deseja cadastrar uma pauta
+    const token = localStorage.getItem('accessToken');
+
+    const requestOptions2 = {
+      method : 'GET',
+      headers: {}
+    };
+    requestOptions2.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const res2 = await fetch(`http://localhost:3000/api/meeting/participantesR/${Number(meeting)}`, requestOptions2)
+      .then((res2) => res2.json())
+      .catch(err => err);
+
+      if(res2.errors){
+        console.log(res2.errors);
+        return;
+      } else {
+        if(res2.length > 0){
+          console.log('Se a reunião já possuir pelo menos um participante não se pode mais inserir pautas. Por favor, excluir a reunião e criar outra.');
+          return;
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log('passou?')
     // console.log(nome, sexo, email, cargo, senha);
     const pautaN = {
       fk_id_reuniao : Number(meeting),
       titulo : pauta,
     };
 
-    const token = localStorage.getItem('accessToken');
+    
     // post request
     const requestOptions = {
       method: 'POST',
@@ -100,13 +128,12 @@ const InsertPauta = () => {
       <form onSubmit={handleSubmit}>
         <label>
           <span>Reuniões cadastradas:</span>
-
-        <select defaultValue={meeting} onChange={(e) => setMeeting(e.target.value)}>
-          <option value={meeting} disabled>Selecione uma reunião</option>
-          {meetings && meetings.map((reuniao) => (
-            <option key={reuniao.id} value={reuniao.id}>{reuniao.titulo}</option>
-          ))}
-        </select>
+          <select defaultValue={meeting} onChange={(e) => setMeeting(e.target.value)}>
+            <option value={meeting} disabled>Selecione uma reunião</option>
+            {meetings && meetings.map((reuniao) => (
+              <option key={reuniao.id} value={reuniao.id}>{reuniao.titulo}</option>
+            ))}
+          </select>
         </label>
         <label>
           <span>Inserir pauta:</span>

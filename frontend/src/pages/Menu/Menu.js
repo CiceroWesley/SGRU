@@ -99,7 +99,49 @@ const Menu = () => {
       }
     };
     getMeetingByFkIdOrganizador();
-  },[])
+  },[]);
+
+  const handleClickDelete = async (reuniaoId) => {
+
+    const token = localStorage.getItem('accessToken');
+
+    const requestOptions = {
+      method : 'DELETE',
+      headers : {}
+    };
+    requestOptions.headers.Authorization = `Bearer ${token}`;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/meeting/${reuniaoId}`, requestOptions)
+      .then((res) => res.json())
+      .catch(err => err);
+
+      if(res.errors){
+        console.log(res.errors);
+      } else {
+        if(Number(res) === 1){
+          setMeetingsOrg(
+            meetingsOrg.filter((meet) => {
+              return meet.id !== reuniaoId
+            })
+          );
+
+          setMeetings(
+            meetings.filter((meet) => {
+              return meet.id !== reuniaoId
+            })
+          );
+          console.log('Reunião excluida com sucesso');
+        }
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+
+
+  };
+
 
   // console.log(meetings)
   return (
@@ -135,6 +177,7 @@ const Menu = () => {
                 <div>
                   <p key={reuniaoOrg.id}>{reuniaoOrg.titulo}</p>
                   <Link to={`/meetingorg/${reuniaoOrg.id}`}>Acessar reunião</Link>
+                  <button onClick={() => handleClickDelete(reuniaoOrg.id)}>Excluir reunião</button>
                 </div>
               )}
               

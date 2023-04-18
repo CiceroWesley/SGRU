@@ -306,6 +306,20 @@ const updateTitlePauta = async (req, res) => {
   res.status(200).json(pauta);
 };
 
+// excluir reuniao
+const deleteMeeting = async (req, res) => {
+  const {id} = req.params;
+
+  const meeting = await Reuniao.destroy(
+    {
+      where : {id}
+    }
+  );
+
+  res.status(200).json(meeting);
+
+}
+
 // VER os gets que faltam das chaves estrangeiras das outras tabelas.
 
-module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting, updateTitlePauta};
+module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting, updateTitlePauta, deleteMeeting};
