@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { jsPDF } from 'jspdf'
 
 const Meeting = () => {
     const {id} = useParams();
@@ -167,7 +168,12 @@ const Meeting = () => {
                 console.log(res2.errors);
               } else {
                 // console.log(res2)
-                setParticipantes((prevParticipantes) => [...prevParticipantes, res2]);
+                const usuario = {
+                  id : res2.id,
+                  nome : res2.nome,
+                  presente : participante.presente
+                }
+                setParticipantes((prevParticipantes) => [...prevParticipantes, usuario]);
               }
               
             });
@@ -206,6 +212,18 @@ const Meeting = () => {
         } else {
           if(Number(res) === 1){
             setParticipante({...participante, presente: true})
+            // estou pegando o id do usuário do localStorage
+            // para previnir alteração por parte do usuário é melhor buscar da api
+            const user = JSON.parse(localStorage.getItem('user'));
+            setParticipantes(
+              participantes.map((participante) => {
+                if(participante.id === user.id){
+                  participante.presente = true;
+                  return participante
+                }
+                return participante
+              })
+            )
           } else {
             console.log('Erro ao marcar presença/reunião não existente');
           } 
@@ -294,6 +312,34 @@ const Meeting = () => {
     }, [pautas, meeting]);
 
 
+    const generatePdf = async () => {
+      console.log('aqui')
+      const doc = jsPDF();
+      if(meeting){
+        doc.text(meeting.titulo, 10, 10);
+        doc.text(meeting.descricao, 10, 20);
+        doc.text(meeting.data, 10, 30);
+        doc.text(meeting.local, 10, 40);
+      }
+      let valor = 50;
+      if(votacao){
+        votacao.forEach((pauta) => {
+          // console.log(pauta.titulo)
+          // console.log(value + 40)
+          doc.text(pauta.titulo + ` A favor ${pauta.afa}, Contra ${pauta.con}, Abstinência ${pauta.abs}`, 10, valor)
+          valor += 10;
+        })
+      }
+
+      if(participantes){
+        participantes.forEach((participante) => {
+          doc.text(participante.nome + '' + participante.presente, 10, valor);
+          valor +=10
+        })
+      }
+      
+      doc.save('a4.pdf')
+    };
 
     // atentar-se a ordem, criar reunião, inserir pautas e por fim inserir participantes
 
@@ -344,6 +390,7 @@ const Meeting = () => {
                 </ul>
               </div>
             ))}
+            <button onClick={generatePdf}>Exporta em pdf o resumo da reunião</button>
           </div>
           
         )}
@@ -364,7 +411,13 @@ const Meeting = () => {
         <div>
           <span>Participantes da reunião:</span>
           {participantes && participantes.map((participante) => (
-            <p key={participante.id}>{participante.nome}</p>
+            <div>
+              {participante.presente ? (
+                <p key={participante.id}>{participante.nome} (Presente)</p>
+              ) : (
+                <p key={participante.id}>{participante.nome}</p>
+              )}
+            </div>
           ))}
 
         </div>
