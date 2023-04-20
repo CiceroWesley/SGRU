@@ -6,6 +6,7 @@ const InsertParticipante = () => {
   const [meeting, setMeeting] = useState('disabled');
   const [usuarios, setUsuarios] = useState([]);
   const [usuario, setUsuario] = useState('');
+  const [participantes, setParticipantes] = useState([]);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
@@ -62,8 +63,10 @@ const InsertParticipante = () => {
         headers: {}
       };
       requestOptions.headers.Authorization = `Bearer ${token}`;
+      // console.log(meeting)
       try {
-        const res = await fetch('http://localhost:3000/api/users/usuarios', requestOptions)
+        // o procedimento que está rota da api faz dava para ter sido feito aqui, bastava procurar os participantes pelo id da reunião e em seguida filtrar de todos os usuários (da rota que requisita os usuários gerais)
+        const res = await fetch(`http://localhost:3000/api/meeting/getusersfilter/${meeting}`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -80,7 +83,7 @@ const InsertParticipante = () => {
     };
     getUsuarios();
 
-  }, []);
+  }, [meeting]);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -158,14 +161,20 @@ const InsertParticipante = () => {
 
 
   }
+  // console.log(participantes)
+  // console.log(usuarios)
   return (
     <div>
-      {/* Antes de inserir os participantes se certificar que todas as pautas foram cadastradas */}
+      {/* Antes de inserir os participantes se certificar que todas as pautas foram cadastradas 
+       , getUsersByMeeting()*/}
       <h2>Insira os participantes</h2>
       <form onSubmit={handleSubmit}>
         <label>
           <span>Reuniões cadastradas:</span>
-          <select defaultValue={meeting} onChange={(e) => setMeeting(e.target.value)}>
+          <select defaultValue={meeting} onChange={(e) => {
+          setMeeting(e.target.value)
+          
+          }}>
             <option value={meeting} disabled>Selecione uma reunião</option>
             {meetings && meetings.map((reuniao) => (
               <option key={reuniao.id} value={reuniao.id}>{reuniao.titulo}</option>

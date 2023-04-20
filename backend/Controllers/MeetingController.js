@@ -320,6 +320,41 @@ const deleteMeeting = async (req, res) => {
 
 }
 
+const getUsersByFkIdMeetingWithFilter = async (req,res) => {
+  const {id} = req.params;
+
+  // getParticipanteByFk_Id_Usuario()
+  // participantes pelo id da reunião
+  const participantes = await Participante.findAll({where : {fk_id_reuniao : id}});
+
+  let usuarios = await Usuario.findAll();
+
+  let usuarioId = [];
+
+  // console.log(participantes)
+  // console.log(usuarios)
+  if(participantes){
+    // procura o index do usuario que é participante da reunião
+    participantes.forEach((participante) => {
+      usuarioId.push(usuarios.findIndex((usuario) => usuario.id == participante.fk_id_usuario))
+    })
+
+    // marca o usuário como disabilitado
+    usuarioId.forEach((id) => {
+      usuarios[id].nome = 'disabled'
+    })
+
+    // filtar os usuários que estão disabled
+    usuarios = usuarios.filter((usuario) => {
+      return usuario.nome !== 'disabled'
+    })
+
+    // console.log(usuarios)
+  } 
+  // dava para ter feito no frontend
+  res.status(200).json(usuarios);
+}
+
 // VER os gets que faltam das chaves estrangeiras das outras tabelas.
 
-module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting, updateTitlePauta, deleteMeeting};
+module.exports = { insertMeeting, getMeetingById, getMeetingByFk_Id_Organizador, insertPauta, getPautaByFk_Id_Reuniao, insertParticipante, getParticipanteByFk_Id_Usuario, getParticipanteByFk_id_Reuniao, insertVotacao, getParticipanteByFk_id_ReuniaoAndFk_id_Usuario, markPresence, vote, getVotacaoByFkIdPauta, finalizeMeeting, updateMeeting, updateTitlePauta, deleteMeeting, getUsersByFkIdMeetingWithFilter};
