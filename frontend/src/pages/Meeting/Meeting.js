@@ -34,28 +34,36 @@ const Meeting = () => {
             requestOptions.headers.Authorization = `Bearer ${token}`;
             // meetings by current user
             try {
-              const res = await fetch('http://localhost:3000/api/meeting/participantes', requestOptions)
-              .then((res) => res.json())
-              .catch(err => err);
+              const meet = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+              .then((meet) => meet.json())
+              .catch((err2) => err2);
 
-              if(res.errors){
-                console.log(res.errors)
+              if(meet.errors){
+                console.log(meet.errors)
+                navigate('/notfound')
               } else {
-                // verificar reuniões que o usuário está participando
-                // console.log(typeof res)
-                let is = false;
-                // Mudar para forEach
-                res.map((participandoReuniao) => {
-                  if(participandoReuniao.fk_id_reuniao === Number(id)){
-                    is = true;
-                  }
-                });
-                // console.log(res)
-                if(!is){
-                  alert('Você não pertence a essa reunião');
-                  navigate('/menu');
-                }
+                const res = await fetch('http://localhost:3000/api/meeting/participantes', requestOptions)
+                .then((res) => res.json())
+                .catch(err => err);
 
+                if(res.errors){
+                  console.log(res.errors)
+                } else {
+                  // verificar reuniões que o usuário está participando
+                  // console.log(typeof res)
+                  let is = false;
+                  // Mudar para forEach
+                  res.map((participandoReuniao) => {
+                    if(participandoReuniao.fk_id_reuniao === Number(id)){
+                      is = true;
+                    }
+                  });
+                  // console.log(res)
+                  if(!is){
+                    alert('Você não pertence a essa reunião');
+                    navigate('/menu');
+                  }
+                }
               }
             } catch (error) {
               console.log(error)
@@ -82,7 +90,8 @@ const Meeting = () => {
                 .catch((err) => err);
 
                 if(res.errors){
-                    console.log(res.erros);
+                    console.log(res.errors);
+                    // navigate('/notfound')
                 } else{
                     setMeeting(res);
 
@@ -311,34 +320,84 @@ const Meeting = () => {
       }
     }, [pautas, meeting]);
 
-
+    // Como saber o momento de adicionar uma nova página? Já que não há uma função/método que fassa isso
     const generatePdf = async () => {
-      console.log('aqui')
+      // 180 e 280
+      // console.log('aqui')
       const doc = jsPDF();
-      if(meeting){
-        doc.text(meeting.titulo, 10, 10);
-        doc.text(meeting.descricao, 10, 20);
-        doc.text(meeting.data, 10, 30);
-        doc.text(meeting.local, 10, 40);
-      }
-      let valor = 50;
-      if(votacao){
+      let nameFile;
+      let valor = 10;
+      let data = [];
+      if(meeting && votacao && participantes){
+        // doc.text([meeting.titulo, meeting.data, meeting.local, meeting.descricao, votacao], 10, valor, {maxWidth : 180, align : 'justify'} );
+        nameFile = `${meeting.titulo}-${meeting.data}`;
+        data = [meeting.titulo, meeting.data, meeting.local, meeting.descricao, 'Votação nas pautas:'];
+        valor += 30 + (meeting.descricao.length/180 * 3.5)
         votacao.forEach((pauta) => {
-          // console.log(pauta.titulo)
-          // console.log(value + 40)
-          doc.text(pauta.titulo + ` A favor ${pauta.afa}, Contra ${pauta.con}, Abstinência ${pauta.abs}`, 10, valor)
-          valor += 10;
-        })
-      }
-
-      if(participantes){
-        participantes.forEach((participante) => {
-          doc.text(participante.nome + '' + participante.presente, 10, valor);
+          data = [...data,`${pauta.titulo} - a favor: ${pauta.afa}, contra: ${pauta.con}, abstinência: ${pauta.abs}`]
           valor +=10
         })
+        data = [...data, 'Participantes:']
+        participantes.forEach((participante) => {
+          if(participante.presente){
+            data = [...data,`${participante.nome}- (presente)` ];
+          } else {
+            data = [...data,`${participante.nome}- (faltou)` ];
+          }
+          valor +=10
+          
+        })
       }
+      doc.text(data, 10, 10, {maxWidth : 180})
+      // console.log(doc.internal.pageSize.getWidth())
+      // console.log(doc.internal.pageSize.getHeight())
       
-      doc.save('a4.pdf')
+      doc.save(nameFile + ".pdf")
+    };
+
+
+    // Como saber o valor atual da altura para verificar se a página é quebrada ou não?
+    const generatePdf2 = async () => {
+      // 180 e 280
+      console.log('aqui')
+      const doc = jsPDF();
+      console.log(doc.internal.pageSize.height)
+      console.log(doc.internal.pageSize.width)
+      let nameFile;
+      let valor = 10;
+      if(meeting){
+        doc.text([meeting.titulo, meeting.data, meeting.local, meeting.descricao], 10, valor, {maxWidth : 180, align : 'justify'} );
+        nameFile = `${meeting.titulo}-${meeting.data}`;
+        // console.log(doc.internal.pageSize.getHeight)
+      }
+      // Como saber o valor atual da altura para verificar se a página é quebrada ou não?
+      // console.log(doc.internal.pageSize.height)
+      // console.log(doc.internal.pageSize.width)
+      // if(votacao){
+      //   votacao.forEach((pauta) => {
+      //     if(valor > 280){
+      //       doc.addPage("a4", "p");
+      //       valor = 10
+      //     }
+      //     // console.log(pauta.titulo)
+      //     // console.log(value + 40)
+      //     doc.text(pauta.titulo + ` A favor ${pauta.afa}, Contra ${pauta.con}, Abstinência ${pauta.abs}`, 10, valor)
+      //     valor += 10;
+      //   })
+      // }
+
+      // if(participantes){
+      //   participantes.forEach((participante) => {
+      //     if(valor > 280){
+      //       doc.addPage("a4", "p");
+      //       valor = 10
+      //     }
+      //     doc.text(participante.nome + '' + participante.presente, 10, valor);
+      //     valor +=10
+      //   })
+      // }
+      
+      // doc.save(nameFile + ".pdf")
     };
 
     // atentar-se a ordem, criar reunião, inserir pautas e por fim inserir participantes
@@ -353,6 +412,7 @@ const Meeting = () => {
 
     // Não é possivel adicionar mais pautas depois de pelo menos um usuário ser adicionado como participante
     // Ao inserir pauta verificar se ja existe um participante (id da reuniao) na reuniao se sim, não deixar inserir outra pauta e pedir para excluir a reunião e criar outra
+    // console.log(meeting.descricao.length)
     return (
       <div>
         {meeting && <div>

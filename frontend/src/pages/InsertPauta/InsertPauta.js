@@ -83,7 +83,7 @@ const InsertPauta = () => {
       console.log(error)
     }
 
-    console.log('passou?')
+    // console.log('passou?')
     // console.log(nome, sexo, email, cargo, senha);
     const pautaN = {
       fk_id_reuniao : Number(meeting),

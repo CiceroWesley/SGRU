@@ -33,28 +33,38 @@ const MeetingOrganizador = () => {
           requestOptions.headers.Authorization = `Bearer ${token}`;
           // meetings by current user
           try {
-            const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
-            .then((res) => res.json())
-            .catch(err => err);
+            const meet = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+            .then((meet) => meet.json())
+            .catch((err2) => err2);
 
-            if(res.errors){
-              console.log(res.errors)
+            if(meet.errors){
+              console.log(meet.errors)
+              navigate('/notfound')
+
             } else {
-              // verificar reuniões que o usuário está organizando
-              // console.log(typeof res)
-              let is = false;
-              
-              res.forEach((participandoReuniao) => {
-                if(participandoReuniao.id === Number(id)){
-                  is = true;
-                }
-              });
-              // console.log(res)
-              if(!is){
-                alert('Você não está organizando essa reunião');
-                navigate('/menu');
-              }
+              const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
+              .then((res) => res.json())
+              .catch(err => err);
 
+              if(res.errors){
+                console.log(res.errors)
+              } else {
+                // verificar reuniões que o usuário está organizando
+                // console.log(typeof res)
+                let is = false;
+                
+                res.forEach((participandoReuniao) => {
+                  if(participandoReuniao.id === Number(id)){
+                    is = true;
+                  }
+                });
+                // console.log(res)
+                if(!is){
+                  alert('Você não está organizando essa reunião');
+                  navigate('/menu');
+                }
+
+              }
             }
           } catch (error) {
             console.log(error)
@@ -81,29 +91,29 @@ const MeetingOrganizador = () => {
             .catch((err) => err);
 
             if(res.errors){
-                console.log(res.erros);
+              console.log(res.errors);
             } else{
-                setMeeting(res);
-                // console.log(res.data.slice(11, 16))
-                setTitulo(res.titulo);
-                setDescricao(res.descricao);
-                setLocal(res.local);
-                setData(res.data.slice(0,10));
-                setHora(res.data.slice(11, 16))
+              setMeeting(res);
+              // console.log(res.data.slice(11, 16))
+              setTitulo(res.titulo);
+              setDescricao(res.descricao);
+              setLocal(res.local);
+              setData(res.data.slice(0,10));
+              setHora(res.data.slice(11, 16))
                 
                 
 
-                // getting pautas
-                const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${res.id}`, requestOptions)
-                .then((res2) => res2.json())
-                .catch((err) => err);
+              // getting pautas
+              const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${res.id}`, requestOptions)
+              .then((res2) => res2.json())
+              .catch((err) => err);
 
-                if(res2.errors){
-                  console.log(res2.errors);
-                } else {
-                  // console.log(res2)
-                  setPautas(res2);
-                }
+              if(res2.errors){
+                console.log(res2.errors);
+              } else {
+                // console.log(res2)
+                setPautas(res2);
+              }
             }
         } catch (error) {
             console.log(error);
@@ -262,7 +272,7 @@ const MeetingOrganizador = () => {
     
   }
 
-  console.log(pautas)
+  // console.log(pautas)
   return (
     <div>
       <h2>Edite os dados da reunião</h2>

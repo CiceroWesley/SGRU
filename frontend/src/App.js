@@ -23,6 +23,7 @@ import InsertParticipante from './pages/InsertParticipante/InsertParticipante';
 import Meeting from './pages/Meeting/Meeting';
 import MeetingOrganizador from './pages/MeetingOrganizador/MeetingOrganizador';
 import EditProfile from './pages/EditProfile/EditProfile';
+import NotFound from './pages/NotFound/NotFound';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -46,6 +47,7 @@ function App() {
             <Route path='/meeting/:id' exact element={<Meeting />}/>
             <Route path='/meetingorg/:id' exact element={<MeetingOrganizador />}/>
             <Route path='/editprofile' exact element={<EditProfile />}/>
+            <Route path='*' element={<NotFound/>}/>
           </Routes>
           <Footer/>
         </BrowserRouter>
