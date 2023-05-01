@@ -1,6 +1,8 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Grid } from "@mui/material";
+
 // context
 import {AuthContext} from '../../context/AuthContext';
 
@@ -116,32 +118,39 @@ const CreateMeeting = () => {
       
     }
   return (
-    <div>
-      <h2>Crie uma reunião</h2>
-      <form onSubmit={handleSubmit}>
-        <label >
-            <span>Título:</span>
-            <input required type="text" onChange={(e) => setTitulo(e.target.value)} value={titulo}/>
-        </label>
-        <label >
-            <span>Descrição:</span>
-            <textarea required cols="30" rows="10" onChange={(e) => setDescricao(e.target.value)} value={descricao}></textarea>
-        </label>
-        <label >
-            <span>Local:</span>
-            <input required type="text" onChange={(e) => setLocal(e.target.value)} value={local}/>
-        </label>
-        <label>
-          <span>Data:</span>
-          <input required type="date" onChange={(e) => setData(e.target.value)} value={data}/>
-        </label>
-        <label>
-          <span>Horário:</span>
-          <input required type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
-        </label>
-        <input type="submit" value='Criar reunião'/>
-      </form>
-    </div>
+    <Grid container>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <h2>Crie uma reunião</h2>
+      </Grid>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <form onSubmit={handleSubmit}>
+          {/* remover componente abaixo colocar form com box e textfield */}
+          <Grid item container direction='column' alignItems='center' justifyContent='center'>
+            <label>
+                <span>Título:</span>
+                <input required type="text" onChange={(e) => setTitulo(e.target.value)} value={titulo}/>
+            </label>
+            <label>
+                <span>Descrição:</span>
+                <textarea required cols="30" rows="10" onChange={(e) => setDescricao(e.target.value)} value={descricao}></textarea>
+            </label>
+            <label>
+                <span>Local:</span>
+                <input required type="text" onChange={(e) => setLocal(e.target.value)} value={local}/>
+            </label>
+            <label>
+              <span>Data:</span>
+              <input required type="date" onChange={(e) => setData(e.target.value)} value={data}/>
+            </label>
+            <label>
+              <span>Horário:</span>
+              <input required type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
+            </label>
+            <input type="submit" value='Criar reunião'/>
+          </Grid>
+        </form>
+      </Grid>
+    </Grid>
   )
 }
 

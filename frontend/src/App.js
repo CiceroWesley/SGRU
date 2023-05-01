@@ -24,6 +24,7 @@ import Meeting from './pages/Meeting/Meeting';
 import MeetingOrganizador from './pages/MeetingOrganizador/MeetingOrganizador';
 import EditProfile from './pages/EditProfile/EditProfile';
 import NotFound from './pages/NotFound/NotFound';
+import Appbar from './components/Navbar/Appbar';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -35,20 +36,23 @@ function App() {
     <div className="App">
       <AuthContext.Provider value={{authState, setAuthState}}>
         <BrowserRouter>
-          <Navbar/>
-          <Routes>
-            <Route path='/' exact element={<Home/>} />
-            <Route path='/login' exact element={<Login/>}/>
-            <Route path='/register' exact element={<Register/>}/>
-            <Route path='/createmeeting' exact element={<CreateMeeting/>}/>
-            <Route path='/menu' exact element={<Menu/>}/>
-            <Route path='/insertpauta' exact element={<InsertPauta/>}/>
-            <Route path='/insertparticipante' exact element={<InsertParticipante/>} />
-            <Route path='/meeting/:id' exact element={<Meeting />}/>
-            <Route path='/meetingorg/:id' exact element={<MeetingOrganizador />}/>
-            <Route path='/editprofile' exact element={<EditProfile />}/>
-            <Route path='*' element={<NotFound/>}/>
-          </Routes>
+          <Appbar/>
+          {/* <Navbar/> */}
+          <div style={{minHeight : "70vh"}}>
+            <Routes>
+              <Route path='/' exact element={<Home/>} />
+              <Route path='/login' exact element={<Login/>}/>
+              <Route path='/register' exact element={<Register/>}/>
+              <Route path='/createmeeting' exact element={<CreateMeeting/>}/>
+              <Route path='/menu' exact element={<Menu/>}/>
+              <Route path='/insertpauta' exact element={<InsertPauta/>}/>
+              <Route path='/insertparticipante' exact element={<InsertParticipante/>} />
+              <Route path='/meeting/:id' exact element={<Meeting />}/>
+              <Route path='/meetingorg/:id' exact element={<MeetingOrganizador />}/>
+              <Route path='/editprofile' exact element={<EditProfile />}/>
+              <Route path='*' element={<NotFound/>}/>
+            </Routes>
+          </div>
           <Footer/>
         </BrowserRouter>
       </AuthContext.Provider>

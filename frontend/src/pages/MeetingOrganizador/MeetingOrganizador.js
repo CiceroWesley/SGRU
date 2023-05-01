@@ -161,9 +161,15 @@ const MeetingOrganizador = () => {
   // A hora está sendo definida como a hora que o usuário setou + 3, não sei porque.
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    // console.log(typeof hora)
+    // let novaHora = Number(`${hora[0]}${hora[1]}`)
+    // // console.log(novaHora)
+    // if(novaHora - 3 < 0){
+    //   novaHora = 24 + (novaHora - 3)
+    // }
+    // console.log(novaHora)
     const dataHorario = `${data} ${hora}:00`;
-    console.log(dataHorario)
+    // console.log(dataHorario)
     // Verificação se a data e horário inseridos não passaram
     const date = new Date();
     if(date.getTime() > Date.parse(dataHorario)){
@@ -177,7 +183,7 @@ const MeetingOrganizador = () => {
     const meeting = {
         titulo,
         descricao,
-        data : dataHorario,
+        data : Date.parse(dataHorario),
         local
     };
 

@@ -274,6 +274,7 @@ const getVotacaoByFkIdPauta = async (req, res) => {
 const updateMeeting = async (req, res) => {
   const {id} = req.params;
   const {titulo, descricao, data, local} = req.body;
+  console.log(data)
   // console.log(data)
   const meeting = await Reuniao.update(
     {

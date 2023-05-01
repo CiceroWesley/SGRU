@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+import { Grid, Divider } from "@mui/material";
+import BasicCard from "../../components/BasicCard/BasicCard";
+
 
 
 const Menu = () => {
   const [meetings, setMeetings] = useState([]);
   const [meetingsOrg, setMeetingsOrg] = useState([]);
-  // DEPOIS ver se da pra fazer assim
-  // https://github.com/CiceroWesley/curso-react-zero-maestria/blob/main/Curso%20react/12_reactgram/frontend/src/hooks/useAuth.js
+
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
   useEffect(() => {
@@ -146,45 +148,54 @@ const Menu = () => {
   // console.log(meetings)
   return (
     <div>
-      <h2>Menu</h2>
-      <div>
-        <span>Reuniões que você está participando:</span>
-        <div>
-          {/* O useEffect está rodando duas vezes, se desativar o Strict Mode resolve. Contudo, não existe outra solução?  */}
-          {meetings && meetings.map((reuniao) => (
-            <div>
-              {reuniao.finalizado ? (
-                <p key={reuniao.id}>{reuniao.titulo} (finalizada)</p>  
-              ) : (
-                <p key={reuniao.id}>{reuniao.titulo}</p>  
-              )}
-              <Link to={`/meeting/${reuniao.id}`}>Acessar reunião</Link>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div>
-        <span>Reuniões que você está organizando:</span>
-        <div>
-          {meetingsOrg && meetingsOrg.map((reuniaoOrg) => (
-            <div>
-              {reuniaoOrg.finalizado ? (
-                <div>
-                  <p key={reuniaoOrg.id}>{reuniaoOrg.titulo} (finalizada)</p>
-                  <Link to={`/meetingorg/${reuniaoOrg.id}`}>Acessar reunião</Link>
-                </div>
-              ) : (
-                <div>
-                  <p key={reuniaoOrg.id}>{reuniaoOrg.titulo}</p>
-                  <Link to={`/meetingorg/${reuniaoOrg.id}`}>Acessar reunião</Link>
-                  <button onClick={() => handleClickDelete(reuniaoOrg.id)}>Excluir reunião</button>
-                </div>
-              )}
-              
-            </div>
-          ))}
-        </div>
-      </div>
+      <Grid container direction='column' alignItems='center'>
+        <Grid item>
+          <h2>Menu</h2>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item container direction='column' alignItems='center' justifyContent='flex-start' xs={5}>
+          <span>Reuniões que você está participando:</span>
+          <div>
+            {/* O useEffect está rodando duas vezes, se desativar o Strict Mode resolve. Contudo, não existe outra solução?  */}
+            {meetings && meetings.map((reuniao) => (
+              <div style={{marginBottom : '10px'}}>
+                {/* colocar props e exportar funcao de exclusao */}
+                {reuniao.finalizado ? (
+                  <BasicCard titulo={reuniao.titulo} finalizado={true} acessar={`/meeting/${reuniao.id}`}/>
+                  // <p key={reuniao.id}>{reuniao.titulo} (finalizada)</p>
+                ) : (
+                  <BasicCard titulo={reuniao.titulo} finalizado={false} acessar={`/meeting/${reuniao.id}`}/>
+                  // <p key={reuniao.id}>{reuniao.titulo}</p>
+                )}
+                {/* <Link to={`/meeting/${reuniao.id}`}>Acessar reunião</Link> */}
+              </div>
+            ))}
+          </div>
+        </Grid>
+        <Grid item xs={1}>
+          <Divider orientation='vertical'/>
+        </Grid>
+        <Grid item container direction='column' alignItems='center' justifyContent='flex-start' xs={5}>
+          <span>Reuniões que você está organizando:</span>
+          <div>
+            {meetingsOrg && meetingsOrg.map((reuniaoOrg) => (
+              <div style={{marginBottom : '10px'}}>
+                {reuniaoOrg.finalizado ? (
+                  <div>
+                    <BasicCard titulo={reuniaoOrg.titulo} finalizado={true} acessar={`/meetingorg/${reuniaoOrg.id}`}/>
+                  </div>
+                ) : (
+                  <div>
+                    <BasicCard titulo={reuniaoOrg.titulo} finalizado={false} acessar={`/meetingorg/${reuniaoOrg.id}`} deleteFunction={handleClickDelete} reuniaoId={reuniaoOrg.id}/>
+                  </div>
+                )}
+        
+              </div>
+            ))}
+          </div>
+        </Grid>
+      </Grid>
     </div>
   )
 }

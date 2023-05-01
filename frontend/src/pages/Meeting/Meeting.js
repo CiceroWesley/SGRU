@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { jsPDF } from 'jspdf'
 
+import { Grid, Paper} from "@mui/material";
+
 const Meeting = () => {
     const {id} = useParams();
 
@@ -415,72 +417,81 @@ const Meeting = () => {
     // console.log(meeting.descricao.length)
     return (
       <div>
-        {meeting && <div>
-          <h2>{meeting.titulo}</h2>
-          <p>Descrição: {meeting.descricao}</p>
-          <p>Local: {meeting.local}</p>
-          <p>Data e horário: {meeting.data}</p>
-        </div>}
-        
-        {meeting && !meeting.finalizado ? (
-          participante && participante.presente ? (
-            pautas && pautas.map((pauta) => (
+
+        <Grid container direction="column" alignItems='center' justifyContent='center'>
+          <Grid item container>
+            {meeting && 
+            <Grid item container direction='column' alignItems='center' justifyContent='center'>
+              <h2>{meeting.titulo}</h2>
+              <p>Descrição: {meeting.descricao}</p>
+              <p>Local: {meeting.local}</p>
+              <p>Data e horário: {meeting.data}</p>
+            </Grid>}
+            
+            {meeting && !meeting.finalizado ? (
+              <Grid item container>
+                {participante && participante.presente ? (
+                  pautas && pautas.map((pauta) => (
+                    <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                      <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+                      <button onClick={() => handleButtonVote(pauta.id, 1)}>A favor</button>
+                      <button onClick={() => handleButtonVote(pauta.id, 0)}>Contra</button>
+                    </Grid>
+                  ))
+                )
+                :
+                (
+                  <p>Marque a presença para visualizar as pautas.</p>
+                )}
+              </Grid>
+            ) : (
+              // caso a reunião já esteja finalizada, exibir a quantidade de votos em cada pauta
+              <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                <p>Essa reunião foi finalizada, veja a votação nas pautas:</p>
+                {votacao && votacao.map((pauta) => (
+                  <div>
+                    <p key={pauta.id}>Pauta: {pauta.titulo}</p>
+                    <ul>
+                      <li>Votos a favor {pauta.afa}</li>
+                      <li>Votos contra {pauta.con}</li>
+                      <li>Abstinência {pauta.abs}</li>
+                    </ul>
+                  </div>
+                ))}
+                <button onClick={generatePdf}>Exporta em pdf o resumo da reunião</button>
+              </Grid>
+            
+            )}
+            
+            <Grid item container direction='column' alignItems='center' justifyContent='center'>
+              {participante &&
+                participante.presente ? (
+                  <p>Você já marcou sua presença</p>
+                )
+                :
+                (
+                  <div>
+                    <p>Você não marcou sua presença</p>
+                    {meeting && !meeting.finalizado && <button onClick={handleButton}>Marcar presença</button>}
+              
+                  </div>
+                )
+              }
+            </Grid>
+          </Grid>
+          <Grid item container direction='column' alignItems='center' justifyContent='center'>
+            <span>Participantes da reunião:</span>
+            {participantes && participantes.map((participante) => (
               <div>
-                <p key={pauta.id}>Pauta: {pauta.titulo}</p>
-                <button onClick={() => handleButtonVote(pauta.id, 1)}>A favor</button>
-                <button onClick={() => handleButtonVote(pauta.id, 0)}>Contra</button>
-              </div>
-            ))
-          )
-          :
-          (
-            <p>Marque a presença para visualizar as pautas.</p>
-          )
-        ) : (
-          // caso a reunião já esteja finalizada, exibir a quantidade de votos em cada pauta
-          <div>
-            <p>Essa reunião foi finalizada, veja a votação nas pautas:</p>
-            {votacao && votacao.map((pauta) => (
-              <div>
-                <p key={pauta.id}>Pauta: {pauta.titulo}</p>
-                <ul>
-                  <li>Votos a favor {pauta.afa}</li>
-                  <li>Votos contra {pauta.con}</li>
-                  <li>Abstinência {pauta.abs}</li>
-                </ul>
+                {participante.presente ? (
+                  <p key={participante.id}>{participante.nome} (Presente)</p>
+                ) : (
+                  <p key={participante.id}>{participante.nome}</p>
+                )}
               </div>
             ))}
-            <button onClick={generatePdf}>Exporta em pdf o resumo da reunião</button>
-          </div>
-          
-        )}
-        
-        {participante &&
-          participante.presente ? (
-            <p>Você já marcou sua presença</p> 
-          )
-          :
-          (
-            <div>
-              <p>Você não marcou sua presença</p>
-              {meeting && !meeting.finalizado && <button onClick={handleButton}>Marcar presença</button>}
-              
-            </div>
-          )
-        }
-        <div>
-          <span>Participantes da reunião:</span>
-          {participantes && participantes.map((participante) => (
-            <div>
-              {participante.presente ? (
-                <p key={participante.id}>{participante.nome} (Presente)</p>
-              ) : (
-                <p key={participante.id}>{participante.nome}</p>
-              )}
-            </div>
-          ))}
-
-        </div>
+          </Grid>
+        </Grid>
       </div>
     )
   }
