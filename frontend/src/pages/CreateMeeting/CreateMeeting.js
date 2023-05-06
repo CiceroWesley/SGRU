@@ -1,7 +1,8 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Grid } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
 
 // context
 import {AuthContext} from '../../context/AuthContext';
@@ -10,10 +11,16 @@ import {AuthContext} from '../../context/AuthContext';
 const CreateMeeting = () => {
     const {authState, setAuthState} = useContext(AuthContext);
 
+    const date1 = new Date().toISOString().slice(0, 10);
+    const horario1 = new Date().toLocaleTimeString().slice(0,5);
+    // let dia = date1.getDate();
+    // let mes = date1.getMonth()
+    // let ano = date1.getFullYear();
+
     const [titulo, setTitulo] = useState('');
     const [descricao, setDescricao] = useState('');
-    const [hora, setHora] = useState('');
-    const [data, setData] = useState('');
+    const [hora, setHora] = useState(horario1);
+    const [data, setData] = useState(date1);
     const [local, setLocal] = useState('');
 
 
@@ -123,32 +130,20 @@ const CreateMeeting = () => {
         <h2>Crie uma reunião</h2>
       </Grid>
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
-        <form onSubmit={handleSubmit}>
-          {/* remover componente abaixo colocar form com box e textfield */}
+        <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
           <Grid item container direction='column' alignItems='center' justifyContent='center'>
-            <label>
-                <span>Título:</span>
-                <input required type="text" onChange={(e) => setTitulo(e.target.value)} value={titulo}/>
-            </label>
-            <label>
-                <span>Descrição:</span>
-                <textarea required cols="30" rows="10" onChange={(e) => setDescricao(e.target.value)} value={descricao}></textarea>
-            </label>
-            <label>
-                <span>Local:</span>
-                <input required type="text" onChange={(e) => setLocal(e.target.value)} value={local}/>
-            </label>
-            <label>
-              <span>Data:</span>
-              <input required type="date" onChange={(e) => setData(e.target.value)} value={data}/>
-            </label>
-            <label>
-              <span>Horário:</span>
-              <input required type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
-            </label>
-            <input type="submit" value='Criar reunião'/>
+            <TextField id="outlined-required" label="Título" helperText="Insira o título da reunião" required type="text" onChange={(e) => setTitulo(e.target.value)} value={titulo}/>
+            
+            <TextField id="outlined-multiline-static" label="Descrição" helperText="Insira a descrição da reunião" multiline rows={4} required onChange={(e) => setDescricao(e.target.value)} value={descricao}/>
+
+            <TextField id="outlined-required" label="Local" helperText="Insira o local da reunião" required type="text" onChange={(e) => setLocal(e.target.value)} value={local}/>
+
+            <TextField id="outlined-required" label="Data" helperText="Insira a data da reunião" required type="date" onChange={(e) => setData(e.target.value)} value={data}/>
+
+            <TextField id="outlined-required" label='Horário' required type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
+            <TextField  type="submit" value='Criar reunião' color="success"/>
           </Grid>
-        </form>
+        </Box>
       </Grid>
     </Grid>
   )

@@ -6,8 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { Link } from 'react-router-dom';
-
 const bull = (
   <Box
     component="span"
@@ -17,23 +15,19 @@ const bull = (
   </Box>
 );
 
-export default function BasicCard({titulo, finalizado, acessar, deleteFunction, reuniaoId}) {
+export default function BasicCard() {
   return (
     <Card sx={{ minWidth: 200 }}>
       <CardContent>
-        <Typography variant="h6" component="div" sx={{maxWidth : 150}}>
-          {titulo}
+        <Typography variant="h6" component="div" sx={{maxWidth : 100}}>
+          lorem
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {finalizado && "finalizada"}
-          {!finalizado}
+          adjective
         </Typography>
       </CardContent>
       <CardActions>
-        {/* <Button size="small"><Link to={acessar}>Acessar reunião</Link></Button> */}
-        <Link to={acessar}><Button size='small'>Acessar reunião</Button></Link>
-        {/* <Button size="small" href={acessar}>Acessar reunião2</Button> */}
-        {deleteFunction && <Button size="small" onClick={() => deleteFunction(reuniaoId)}>Excluir reunião</Button>}
+        <Button size="small">Learn More</Button>
       </CardActions>
     </Card>
   );

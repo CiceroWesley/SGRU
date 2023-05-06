@@ -429,7 +429,7 @@ const Meeting = () => {
             </Grid>}
             
             {meeting && !meeting.finalizado ? (
-              <Grid item container>
+              <Grid item container direction='column' alignItems='center' justifyContent='center'>
                 {participante && participante.presente ? (
                   pautas && pautas.map((pauta) => (
                     <Grid item container direction='column' alignItems='center' justifyContent='center'>
@@ -441,7 +441,9 @@ const Meeting = () => {
                 )
                 :
                 (
-                  <p>Marque a presença para visualizar as pautas.</p>
+                  <div>
+                    <p>Marque a presença para visualizar as pautas.</p>
+                  </div>
                 )}
               </Grid>
             ) : (
@@ -470,11 +472,11 @@ const Meeting = () => {
                 )
                 :
                 (
-                  <div>
+                  <Grid item container direction='column' alignItems='center' justifyContent='center'>
                     <p>Você não marcou sua presença</p>
-                    {meeting && !meeting.finalizado && <button onClick={handleButton}>Marcar presença</button>}
-              
-                  </div>
+                    {meeting && !meeting.finalizado && 
+                    <button onClick={handleButton}>Marcar presença</button>}
+                  </Grid>
                 )
               }
             </Grid>

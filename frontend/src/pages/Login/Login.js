@@ -2,6 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import {AuthContext} from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
+import { Grid, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -67,21 +70,25 @@ const Login = () => {
   }
 
   return (
-    <div>
+    <Grid container>
       {error && <p>{error}</p>}
-      <h2>Fazer login</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>E-mail:</span>
-          <input required type="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
-        </label>
-        <label>
-          <span>Senha:</span>
-          <input required type="password" onChange={(e) => setSenha(e.target.value)} value={senha}/>
-        </label>
-        <input type="submit" value='Login' />
-      </form>
-    </div>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <h2>Fazer login</h2>
+      </Grid>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
+          <Grid item container direction='column' alignItems='center' justifyContent='center'>
+            <TextField id="outlined-required" label="Email" helperText="Insira o novo email" required type="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
+
+            <TextField id="outlined-required" label="Senha" helperText="Insira a nova senha" required type="password" onChange={(e) => setSenha(e.target.value)} value={senha}/>
+
+            <TextField type="submit" value='Entrar' color="success"/>
+          </Grid>
+        </Box>
+      </Grid>
+
+
+    </Grid>
   )
 }
   

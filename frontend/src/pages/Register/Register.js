@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
+import Box from "@mui/material/Box";
+
 const Register = () => {
   const [nome, setNome] = useState('');
   const [sexo, setSexo] = useState('M');
@@ -61,37 +64,38 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <Grid container>
       {errorR && <p>{errorR}</p>}
-      <h2>Crie um conta</h2>
-      <form onSubmit={handleSubmit} >
-        <label>
-          <span>Nome</span>
-          <input type="text" placeholder="Nome" onChange={(e) => setNome(e.target.value)} value={nome} required />
-        </label>
-        <label>
-          <span>Sexo:</span>
-          <select value={sexo} onChange={(e) => setSexo(e.target.value)}>
-            <option value="M">Masculino</option>
-            <option value="F">Feminino</option>
-          </select>
-        </label>
-        <label>
-          <span>E-mail:</span>
-          <input type="email" onChange={(e) => setEmail(e.target.value)} value={email} required/>
-        </label>
-        <label>
-          <span>Cargo:</span>
-          <input type="text" onChange={(e) => setCargo(e.target.value)} value={cargo} required/>
-        </label>
-        <label>
-          <span>Senha:</span>
-          <input type="password" onChange={(e) => setSenha(e.target.value)} value={senha} required/>
-        </label>
-        <input type="submit" value='Cadastrar' />
-        
-      </form>
-    </div>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <h2>Crie uma conta</h2>
+      </Grid>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
+          <Grid item container direction='column' alignItems='center' justifyContent='center'>
+            <TextField id="outlined-required" label="Nome" helperText="Insira o seu nome" required type="text" onChange={(e) => setNome(e.target.value)} value={nome}/>
+            <FormControl sx={{ m: 1, minWidth: 150}}>
+              <InputLabel id="sexoSelect">Sexo</InputLabel>
+              <Select required defaultValue={sexo} labelId="sexoSelect" id="demo-simple-select-helper" value={sexo} label="Sexo" onChange={(e) => setSexo(e.target.value)} sx={{minWidth: 219 ,maxWidth: 219}}>
+              <MenuItem value="M">Masculino</MenuItem>
+              <MenuItem value="F">Feminino</MenuItem>
+              </Select>
+              <FormHelperText>Selecione seu sexo</FormHelperText>
+            </FormControl>
+            <TextField id="outlined-required" label="Email" helperText="Insira o seu email" required type="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
+
+            <TextField id="outlined-required" label="Cargo" helperText="Insira o seu cargo" required type="text" onChange={(e) => setCargo(e.target.value)} value={cargo}/>
+
+            <TextField id="outlined-required" label="Senha" helperText="Insira o sua senha" required type="password" onChange={(e) => setSenha(e.target.value)} value={senha}/>
+
+            <TextField  type="submit" value='Criar conta' color="success"/>
+          </Grid>
+        </Box>
+      </Grid>
+
+
+
+
+    </Grid>
   )
 }
   

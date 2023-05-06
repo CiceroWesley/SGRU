@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
+import Box from "@mui/material/Box";
+
 const InsertPauta = () => {
   const [meetings, setMeetings] = useState([]);
   const [meeting, setMeeting] = useState('disabled');
@@ -123,25 +126,29 @@ const InsertPauta = () => {
   // não é possível excluir pauta
   // Inserir um campo resolução para o organizador do encontro e permitir ele adicionar separado da edição da reunião.
   return (
-    <div>
-      <h2>Insira suas pautas</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>Reuniões cadastradas:</span>
-          <select defaultValue={meeting} onChange={(e) => setMeeting(e.target.value)}>
-            <option value={meeting} disabled>Selecione uma reunião</option>
-            {meetings && meetings.map((reuniao) => (
-              <option key={reuniao.id} value={reuniao.id}>{reuniao.titulo}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          <span>Inserir pauta:</span>
-          <input type="text" value={pauta} onChange={(e) => setPauta(e.target.value)} />
-        </label>
-        <input type="submit" value='Inserir'/>
-      </form>
-    </div>
+    <Grid container>      
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <h2>Inserir pautas</h2>
+      </Grid>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
+          <Grid item container direction='column' alignItems='center' justifyContent='center'>
+            <FormControl sx={{ m: 1, minWidth: 150}}>
+              <InputLabel id="reuniaoSelect">Reuniões cadastradas</InputLabel>
+              <Select required defaultValue={meeting} labelId="reuniaoSelect" id="demo-simple-select-helper" value={meeting} label="Reuniões cadastradas" onChange={(e) => setMeeting(e.target.value)} sx={{minWidth: 219 ,maxWidth: 219}}>
+              <MenuItem value={meeting} disabled><em>Selecione uma reunião</em></MenuItem>
+              {meetings && meetings.map((reuniao) => (
+                <MenuItem key={reuniao.id} value={reuniao.id}>{reuniao.titulo}</MenuItem>
+              ))}
+              </Select>
+              <FormHelperText>Selecione uma reunião</FormHelperText>
+            </FormControl>
+            <TextField id="outlined-required" label="Pauta" helperText="Insira o nome da pauta" required type="text" onChange={(e) => setPauta(e.target.value)} value={pauta}/>
+            <TextField  type="submit" value='Inserir pauta' color="success"/>
+          </Grid>
+        </Box>
+      </Grid>
+    </Grid>
   )
 }
 

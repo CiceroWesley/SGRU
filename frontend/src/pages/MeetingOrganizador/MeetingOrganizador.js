@@ -183,7 +183,7 @@ const MeetingOrganizador = () => {
     const meeting = {
         titulo,
         descricao,
-        data : Date.parse(dataHorario),
+        data : dataHorario,
         local
     };
 

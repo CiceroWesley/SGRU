@@ -1,6 +1,9 @@
 import {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import { Grid, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+
 const EditProfile = () => {
 
   const [nome, setNome] = useState('');
@@ -106,29 +109,26 @@ const EditProfile = () => {
 
 
   return (
-    <div>
-      <h2>Edite seus dados:</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>Nome:</span>
-          <input type="text" value={nome} onChange={(e) => setNome(e.target.value)}/>
-        </label>
-        <label>
-          <span>E-mail:</span>
-          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}/>
-        </label>
-        <label>
-          <span>Cargo:</span>
-          <input type="text" value={cargo} onChange={(e) => setCargo(e.target.value)}/>
-        </label>
-        <label>
-          <span>Senha:</span>
-          <input type="password" required value={senha} onChange={(e) => setSenha(e.target.value)}/>
-        </label>
-        <input type="submit" value='Editar'/>
-      </form>
+    <Grid container>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <h2>Edite seus dados</h2>
+      </Grid>
+      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+        <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
+          <Grid item container direction='column' alignItems='center' justifyContent='center'>
+            <TextField id="outlined-required" label="Nome" helperText="Insira o novo nome" required type="text" onChange={(e) => setNome(e.target.value)} value={nome}/>
 
-    </div>
+            <TextField id="outlined-required" label="Email" helperText="Insira o novo email" required type="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
+
+            <TextField id="outlined-required" label="Cargo" helperText="Insira o novo cargo" required type="text" onChange={(e) => setCargo(e.target.value)} value={cargo}/>
+
+            <TextField id="outlined-required" label="Senha" helperText="Insira a nova senha" required type="password" onChange={(e) => setSenha(e.target.value)} value={senha}/>
+
+            <TextField type="submit" value='Editar' color="success"/>
+          </Grid>
+        </Box>
+      </Grid>
+    </Grid>
   )
 }
 

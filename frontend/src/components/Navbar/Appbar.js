@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { AccountCircle } from '@mui/icons-material';
 
 
@@ -31,10 +31,10 @@ function Appbar() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   if(user){
-    pages = [<Link to='/menu'>Menu</Link>, <Link to='/createmeeting'>Criar reunião</Link>, <Link to='/insertpauta'>Inserir pauta</Link>, <Link to='/insertparticipante'>Inserir participante</Link>]
-    settings = [<Link to='/editprofile'>{user.username}</Link>, <button onClick={handleLogout}>Sair</button>]
+    pages = [{to: '/menu', name: "Menu"}, {to: '/createmeeting', name: "Criar reunião"}, {to: '/insertpauta', name: "Inserir pauta"}, {to: '/insertparticipante', name: "Inserir participantes"}]
+    settings = [{click: () => {navigate('/editprofile')}, name:`${user.username}`}, {click: handleLogout, name:'Sair'}]
   } else {
-    pages = [<Link to='/register'>Registrar</Link>];
+    pages = [{to: '/register', name: "Registar"}];
     settings = [];
   }
 
@@ -112,9 +112,11 @@ function Appbar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link to={page.to}>
+                  <MenuItem key={page.to} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -139,18 +141,30 @@ function Appbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+              <Link to={page.to}>
+                <Button
+                  key={page.to}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page.name}
+                </Button>
+              </Link>
             ))}
           </Box>
 
           {!user ? (
-            <Link to='/login'>Login</Link>
+            <Box>
+              <Link to='/login'>
+                <Button
+                  key='/login'
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white' }}
+                >
+                  LOGIN
+                </Button>
+              </Link>
+          </Box>
           ) : (
             <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
@@ -177,7 +191,7 @@ function Appbar() {
             >
             {settings.map((setting) => (
               <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
+                <Typography component='span' onClick={setting.click} textAlign="center">{setting.name}</Typography>
               </MenuItem>
             ))}
             </Menu>
