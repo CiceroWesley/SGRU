@@ -116,13 +116,13 @@ const EditProfile = () => {
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
         <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
           <Grid item container direction='column' alignItems='center' justifyContent='center'>
-            <TextField id="outlined-required" label="Nome" helperText="Insira o novo nome" required type="text" onChange={(e) => setNome(e.target.value)} value={nome}/>
+            <TextField id="outlined-required" label="Nome" helperText="Insira o novo nome" required type="text" onChange={(e) => setNome(e.target.value)} value={nome || ''}/>
 
-            <TextField id="outlined-required" label="Email" helperText="Insira o novo email" required type="email" onChange={(e) => setEmail(e.target.value)} value={email}/>
+            <TextField id="outlined-required" label="Email" helperText="Insira o novo email" required type="email" onChange={(e) => setEmail(e.target.value)} value={email || ''}/>
 
-            <TextField id="outlined-required" label="Cargo" helperText="Insira o novo cargo" required type="text" onChange={(e) => setCargo(e.target.value)} value={cargo}/>
+            <TextField id="outlined-required" label="Cargo" helperText="Insira o novo cargo" required type="text" onChange={(e) => setCargo(e.target.value)} value={cargo || ''}/>
 
-            <TextField id="outlined-required" label="Senha" helperText="Insira a nova senha" required type="password" onChange={(e) => setSenha(e.target.value)} value={senha}/>
+            <TextField id="outlined-required" label="Senha" helperText="Insira a nova senha" required type="password" onChange={(e) => setSenha(e.target.value)} value={senha  || ''}/>
 
             <TextField type="submit" value='Editar' color="success"/>
           </Grid>

@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom";
+
+import { Grid, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Alert from '@mui/material/Alert';
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import SubjectIcon from '@mui/icons-material/Subject';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 const MeetingOrganizador = () => {
   const {id} = useParams();
@@ -170,6 +182,7 @@ const MeetingOrganizador = () => {
     // console.log(novaHora)
     const dataHorario = `${data} ${hora}:00`;
     // console.log(dataHorario)
+    // Isso tem sentido? já que não é possivel editar por causa do horario
     // Verificação se a data e horário inseridos não passaram
     const date = new Date();
     if(date.getTime() > Date.parse(dataHorario)){
@@ -280,60 +293,65 @@ const MeetingOrganizador = () => {
 
   // console.log(pautas)
   return (
-    <div>
-      <h2>Edite os dados da reunião</h2>
-      {/* bloquear a edição caso esteja finalizada */}
-      
-      {/* {meeting && <div>
-          <h2>{meeting.titulo}</h2>
-          <p>Descrição: {meeting.descricao}</p>
-          <p>Local: {meeting.local}</p>
-          <p>Data e horário: {meeting.data}</p>
-        </div>} */}
-
+    <Grid container>
         {meeting && !meeting.finalizado ? (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <label>
-                <span>Título:</span>
-                <input type="text" placeholder="Título" onChange={(e) => setTitulo(e.target.value)} value={titulo || ''} />
-              </label>
-              <label>
-                <span>Descrição:</span>
-                <textarea placeholder="Descrição" onChange={(e) => setDescricao(e.target.value)} value={descricao || ''}></textarea>
-              </label>
-              <label>
-                <span>Local:</span>
-                <input type="text" placeholder="Local" onChange={(e) => setLocal(e.target.value)} value={local} />
-              </label>
-              <label>
-                <span>Data:</span>
-                <input type="date" onChange={(e) => setData(e.target.value)} value={data}/>
-              </label>
-              <label>
-                <span>Horário:</span>
-                <input type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
-              </label>
-              <input type="submit" value='Editar'/>
-            </form>
-            {pautas && pautas.map((pauta) => (
-            <div>
-              <p onDoubleClick={() => handleDoubleClick(pauta.id)} key={pauta.id}>Pauta: {pauta.titulo}</p>
-              {/* <input type="text" value={pauta.titulo} onDoubleClick={handleDoubleClick} /> */}
-            </div>
-            ))}
-            <div>
-              <span>Essa reunião não foi finalizada</span>
-              <button onClick={handleClick}>Finalizar reunião</button>
-            </div>
-          </div>
+          <Grid item container>
+            <Grid item container direction='column' alignItems='center' justifyContent='center'>
+              <h2>Edite os dados da reunião</h2>
+            </Grid>
+            <Grid item container direction='column' alignItems='center' justifyContent='center'>
+              <Box onSubmit={handleSubmit} component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' }, }} autoComplete="off">
+                <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                  <TextField id="outlined-required" label="Título" helperText="Insira o título da reunião" required type="text" onChange={(e) => setTitulo(e.target.value)} value={titulo || ''}/>
+                  
+                  <TextField id="outlined-multiline-static" label="Descrição" helperText="Insira a descrição da reunião" multiline rows={4} required onChange={(e) => setDescricao(e.target.value)} value={descricao || ''}/>
+
+                  <TextField id="outlined-required" label="Local" helperText="Insira o local da reunião" required type="text" onChange={(e) => setLocal(e.target.value)} value={local  || ''}/>
+
+                  <TextField id="outlined-required" label="Data" helperText="Insira a data da reunião" required type="date" onChange={(e) => setData(e.target.value)} value={data  || ''}/>
+
+                  <TextField id="outlined-required" label='Horário' helperText="Insira o horario da reunião" required type="time" onChange={(e) => setHora(e.target.value)} value={hora  || ''}/>
+                  <TextField  type="submit" value='Editar reunião' color="success"/>
+                </Grid>
+              </Box>
+            </Grid>
+            <Grid item container direction='column' alignItems='center' justifyContent='center'>
+              {/* <Box component="div" sx={{ p: 2, border: '1px dashed grey' }}> */}
+                {pautas && pautas.length!=0 && <List
+                  sx={{ width: '100%', maxWidth: 360, bgcolor: 'primary', border: '1px solid gray' }}
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                      Pautas
+                    </ListSubheader>
+                  }
+                >
+                  {pautas && pautas.map((pauta) => (
+                    <ListItemButton key={pauta.id} onDoubleClick={() => handleDoubleClick(pauta.id)}>
+                      <ListItemIcon>
+                        <SubjectIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={pauta.titulo}/>
+                    </ListItemButton>
+                  ))}
+                </List>}
+              {/* </Box> */}
+            </Grid>
+            <Grid item container marginTop="10px" direction='column' alignItems='center' justifyContent='space-between'>
+              <Stack direction='column' spacing={2}>
+                <Alert severity="info">Essa reunião não foi finalizada</Alert>
+                <Button variant="contained" color="error" onClick={handleClick}>Finalizar reunião</Button>
+              </Stack>
+            </Grid>
+          </Grid>
         ) : (
-          <div>
-            <span>Reuniões finalizadas não podem ser editadas.</span>
-          </div>
+          <Grid item container direction='column' alignItems='center' justifyContent='center' marginTop="20px">
+            <Alert severity="info">Reuniões finalizadas não podem ser editadas.</Alert>
+          </Grid>
         )
         }
-    </div>
+    </Grid>
   )
 }
 

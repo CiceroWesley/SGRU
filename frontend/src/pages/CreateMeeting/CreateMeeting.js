@@ -140,7 +140,7 @@ const CreateMeeting = () => {
 
             <TextField id="outlined-required" label="Data" helperText="Insira a data da reunião" required type="date" onChange={(e) => setData(e.target.value)} value={data}/>
 
-            <TextField id="outlined-required" label='Horário' required type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
+            <TextField id="outlined-required" label='Horário' required helperText="Insira o horario da reunião" type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
             <TextField  type="submit" value='Criar reunião' color="success"/>
           </Grid>
         </Box>
