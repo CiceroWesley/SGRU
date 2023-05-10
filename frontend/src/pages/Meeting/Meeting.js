@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { jsPDF } from 'jspdf'
 
-import { Grid, Paper} from "@mui/material";
+import { Grid, Box, Button, ButtonGroup, Alert, Typography, Divider} from "@mui/material";
+import DescriptionIcon from '@mui/icons-material/Description';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CheckIcon from '@mui/icons-material/Check';
+import ReportIcon from '@mui/icons-material/Report';
 
 const Meeting = () => {
     const {id} = useParams();
@@ -421,35 +426,74 @@ const Meeting = () => {
         <Grid container direction="column" alignItems='center' justifyContent='center'>
           <Grid item container>
             {meeting && 
-            <Grid item container direction='column' alignItems='center' justifyContent='center'>
-              <h2>{meeting.titulo}</h2>
-              <p>Descrição: {meeting.descricao}</p>
-              <p>Local: {meeting.local}</p>
-              <p>Data e horário: {meeting.data}</p>
+            <Grid item container direction="column" alignItems='center' justifyContent='center' margin="5px">
+              <Box component="span" sx={{ p: 2, border: '1px solid grey', width: '100%', maxWidth: 500}}>
+                <Grid item container spacing={1}>
+                  <Grid item container direction="column" alignItems='center' justifyContent='center'>
+                    <h2>{meeting.titulo}</h2>
+                  </Grid>
+                  <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                    <DescriptionIcon/>
+                    {meeting.descricao}
+                  </Grid>
+                  <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                    <LocationOnIcon/>
+                    {meeting.local}
+                  </Grid>
+                  <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                    <AccessTimeIcon/>
+                    {meeting.data}
+                  </Grid>
+                </Grid>
+              </Box>
             </Grid>}
             
             {meeting && !meeting.finalizado ? (
               <Grid item container direction='column' alignItems='center' justifyContent='center'>
-                {participante && participante.presente ? (
-                  pautas && pautas.map((pauta) => (
-                    <Grid item container direction='column' alignItems='center' justifyContent='center'>
-                      <p key={pauta.id}>Pauta: {pauta.titulo}</p>
-                      <button onClick={() => handleButtonVote(pauta.id, 1)}>A favor</button>
-                      <button onClick={() => handleButtonVote(pauta.id, 0)}>Contra</button>
-                    </Grid>
-                  ))
-                )
-                :
-                (
-                  <div>
-                    <p>Marque a presença para visualizar as pautas.</p>
-                  </div>
-                )}
+                {pautas && pautas.length != 0 && <Grid item contaier>
+                  <h3>Pautas</h3>
+                </Grid>}
+                
+                <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                  {participante && participante.presente ? (
+                    pautas && pautas.map((pauta) => (
+                      <Box component="span" margin="2px" sx={{ p: 2, border: '1px solid grey', width: '100%', maxWidth: 300}}>
+                        <Grid item container direction='column' alignItems='center' justifyContent='center' sx={{maxWidth: 500}}>
+                          <Grid item container direction='column' alignItems='center' justifyContent='center' key={pauta.id}><strong>{pauta.titulo}</strong></Grid>
+                          <Grid item container directon='row' alignItems='center' justifyContent='center'>
+                            <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                              <Button size="small" color="success" onClick={() => handleButtonVote(pauta.id, 1)}>A favor</Button>
+                              <Button size="small" color="error" onClick={() => handleButtonVote(pauta.id, 0)}>Contra</Button>
+                            </ButtonGroup>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    ))
+                  )
+                  :
+                  (
+                    <>
+                    {pautas && pautas.length > 0 ? (
+                      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                        <Alert severity="info">Marque a presença para visualizar as pautas.</Alert>
+                      </Grid>
+                    ) : (
+                      <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                        <Alert severity="info">Marque a sua presença</Alert>
+                      </Grid>
+                    )}
+                    </>
+                  )}
+                </Grid>
               </Grid>
             ) : (
               // caso a reunião já esteja finalizada, exibir a quantidade de votos em cada pauta
               <Grid item container direction='column' alignItems='center' justifyContent='center'>
-                <p>Essa reunião foi finalizada, veja a votação nas pautas:</p>
+                {votacao && votacao.length > 0 ? (
+                  <Alert severity="info">Essa reunião foi finalizada, veja a votação das pautas</Alert>
+                ) : (
+                  <Alert severity="info">Essa reunião foi finalizada</Alert>
+                )}
                 {votacao && votacao.map((pauta) => (
                   <div>
                     <p key={pauta.id}>Pauta: {pauta.titulo}</p>
@@ -460,7 +504,7 @@ const Meeting = () => {
                     </ul>
                   </div>
                 ))}
-                <button onClick={generatePdf}>Exporta em pdf o resumo da reunião</button>
+                {/* <button onClick={generatePdf}>Exporta em pdf o resumo da reunião</button> */}
               </Grid>
             
             )}
@@ -468,30 +512,47 @@ const Meeting = () => {
             <Grid item container direction='column' alignItems='center' justifyContent='center'>
               {participante &&
                 participante.presente ? (
-                  <p>Você já marcou sua presença</p>
+                  <Grid item container direction='column' alignItems='center' justifyContent='center' marginTop={2}>
+                    <Alert margin severity='info'>Você já marcou sua presença</Alert>
+                  </Grid>
                 )
                 :
                 (
-                  <Grid item container direction='column' alignItems='center' justifyContent='center'>
-                    <p>Você não marcou sua presença</p>
+                  <Grid item container direction='column' alignItems='center' justifyContent='center' marginTop={2}>
+                    <Alert severity="info">Você não marcou sua presença</Alert>
                     {meeting && !meeting.finalizado && 
-                    <button onClick={handleButton}>Marcar presença</button>}
+                    <Button sx={{marginTop:2}} variant="contained" size="small" color="info" onClick={handleButton}>Marcar presença</Button>}
                   </Grid>
                 )
               }
             </Grid>
           </Grid>
-          <Grid item container direction='column' alignItems='center' justifyContent='center'>
-            <span>Participantes da reunião:</span>
-            {participantes && participantes.map((participante) => (
-              <div>
-                {participante.presente ? (
-                  <p key={participante.id}>{participante.nome} (Presente)</p>
-                ) : (
-                  <p key={participante.id}>{participante.nome}</p>
-                )}
-              </div>
-            ))}
+          <Grid item container direction='column' alignItems='center' justifyContent='center' marginTop={2}>
+            <Box component="span" margin="2px" sx={{ p: 2, border: '1px solid grey', width: '100%', maxWidth: 200}}>
+              <Grid item container direction='column' alignItems='center' justifyContent='center'>
+                <Typography variant="subtitle2" gutterBottom>
+                  Participantes da reunião:
+                </Typography>
+              </Grid>
+              <>
+              
+              </>
+              {participantes && participantes.map((participante) => (
+                <Grid item container direction='column' alignItems='center' justifyContent='center' border='1px solid gray'>
+                  {participante.presente ? (
+                      <Typography variant="body2" gutterBottom key={participante.id}>
+                        {participante.nome}
+                        <CheckIcon fontSize="small" color="success"/>
+                      </Typography>
+                  ) : (
+                    <Typography variant="body2" gutterBottom key={participante.id}>
+                      {participante.nome}
+                      <ReportIcon fontSize="small" color='warning' />
+                    </Typography>
+                  )}
+                </Grid>
+              ))}
+            </Box>
           </Grid>
         </Grid>
       </div>
