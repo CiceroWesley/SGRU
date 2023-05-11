@@ -339,7 +339,7 @@ const MeetingOrganizador = () => {
               {/* </Box> */}
             </Grid>
             <Grid item container marginTop="10px" direction='column' alignItems='center' justifyContent='space-between'>
-              <Stack direction='column' spacing={2}>
+              <Stack direction='column' spacing={2} marginBottom={2}>
                 <Alert severity="info">Essa reunião não foi finalizada</Alert>
                 <Button variant="contained" color="error" onClick={handleClick}>Finalizar reunião</Button>
               </Stack>

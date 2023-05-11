@@ -1,41 +1,64 @@
-import { Container, Divider, Grid } from "@mui/material"
+import { Container, Divider, Grid, Typography, Link } from "@mui/material"
 import EmailIcon from '@mui/icons-material/Email';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import InstagramIcon from '@mui/icons-material/Instagram';
+
+// import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer>
+    // colocar borda arredondada
+    <footer style={{backgroundColor: '#1976d2', border:"1px solid black", borderRadius: "5px"}}>
       {/* <p>Sistema &copy; 2023</p> */}
-      <Divider/>
+      
       <Grid container rowSpacing={2}>
         <Grid item container>
-          <Grid item xs={8}>
-            Logo
-          </Grid>  
+          <Grid item container xs={6}>
+              Logo
+          </Grid> 
+          <Grid item container xs={6}>
+          <Typography variant="body2" gutterBottom color='white'>
+            O SGRU (Sistema Gerenciador de Reuniões Universitárias) é um sistema web desenvolvido para o Trabalho de Conclusão de Curso (TCC) do discente Cicero Wesley Suares Feitosa. O TCC é requisito parcial para a obtenção do grau de Bacharel em Ciência da Computação pela Universidade Federal do Cariri (UFCA).  
+          </Typography>
+          </Grid> 
         </Grid>
+        <Grid item container direction='row' alignItems='center' justifyContent='center'>
+          <Divider sx={{width:'90%', borderBottomWidth: 2}}/>
+        </Grid>
+        
         <Grid item container>
+          <Grid item container xs={8}>
+            <Typography variant="body2" gutterBottom color='white'>
+              &copy; 2023 Cicero Wesley Suares Feitosa. Todos os direitos reservados.
+            </Typography>
+          </Grid>
+          <Grid item container direction='row' justifyContent='space-around' xs={4}>
+            <Link href="mailto:wesleycariutaba@gmail.com">
+              <EmailIcon sx={{color : 'white'}}/>
+            </Link>
+            <Link target="_about" href="https://www.linkedin.com/in/cicero-wesley/">
+              <LinkedInIcon sx={{color : 'white'}}/>
+            </Link>
+            <Link target="_about" href="https://github.com/CiceroWesley">
+              <GitHubIcon sx={{color : 'white'}}/>
+            </Link>
+            <Link target="_about" href="https://www.instagram.com/cicero_wesleysf/">
+              <InstagramIcon sx={{color : 'white'}}/>
+            </Link>
+          </Grid>
+        </Grid>
+        {/* <Grid item container>
           <Grid container xs={6}>
-            <Grid item container alignItems='center' direction='column' xs={6}>
-              <strong>SOBRE</strong>
-              <span>O que é?</span>
-              <span>Funcionalidades</span>
-              <span>Desenvolvedor</span>
-            </Grid>
-            <Grid item container alignItems='center' direction='column' xs={6}>
+            <Grid item container alignItems='center' direction='column' xs={12}>
               <strong>CONTATO</strong>
-              <EmailIcon/>
-              <LinkedInIcon/>
-              <GitHubIcon/>
+              
             </Grid>
           </Grid>
           <Grid container xs={6}>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo sit voluptates iste voluptatem eos, delectus consequatur quisquam reiciendis explicabo optio perferendis natus alias nulla minus quis laborum consequuntur consectetur enim!
+            
           </Grid>
-        </Grid>
-        <Grid item container justifyContent='center' alignItems='center'>
-          copyright
-        </Grid>
+        </Grid> */}
       </Grid>
       
     </footer>

@@ -9,6 +9,14 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckIcon from '@mui/icons-material/Check';
 import ReportIcon from '@mui/icons-material/Report';
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 const Meeting = () => {
     const {id} = useParams();
 
@@ -494,16 +502,33 @@ const Meeting = () => {
                 ) : (
                   <Alert severity="info">Essa reunião foi finalizada</Alert>
                 )}
-                {votacao && votacao.map((pauta) => (
-                  <div>
-                    <p key={pauta.id}>Pauta: {pauta.titulo}</p>
-                    <ul>
-                      <li>Votos a favor {pauta.afa}</li>
-                      <li>Votos contra {pauta.con}</li>
-                      <li>Abstinência {pauta.abs}</li>
-                    </ul>
-                  </div>
-                ))}
+                {votacao && votacao.length > 0 && <TableContainer component={Paper} sx={{ minWidth: 150, maxWidth: 370, marginTop: 2 }}>
+                  <Table sx={{ minWidth: 170}} size='small' aria-label="simple table">
+                    <TableHead >
+                      <TableRow >
+                        <TableCell><strong>Pautas</strong></TableCell>
+                        <TableCell align="right"><strong>A favor</strong></TableCell>
+                        <TableCell align="right"><strong>Contra</strong></TableCell>
+                        <TableCell align="right"><strong>Abstenção</strong></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {votacao && votacao.map((pauta) => (
+                      <TableRow
+                        key={pauta.id}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row">
+                          <strong>{pauta.titulo}</strong>
+                        </TableCell>
+                        <TableCell align="center">{pauta.afa}</TableCell>
+                        <TableCell align="center">{pauta.con}</TableCell>
+                        <TableCell align="center">{pauta.abs}</TableCell>
+                      </TableRow>
+                    ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>}
                 {/* <button onClick={generatePdf}>Exporta em pdf o resumo da reunião</button> */}
               </Grid>
             
@@ -534,9 +559,6 @@ const Meeting = () => {
                   Participantes da reunião:
                 </Typography>
               </Grid>
-              <>
-              
-              </>
               {participantes && participantes.map((participante) => (
                 <Grid item container direction='column' alignItems='center' justifyContent='center' border='1px solid gray'>
                   {participante.presente ? (

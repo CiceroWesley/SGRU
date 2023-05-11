@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Toast from '../../components/Toast/Toast'
+
 import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import Box from "@mui/material/Box";
 
@@ -50,7 +52,9 @@ const Register = () => {
 
       if(res.errors){
         setErrorR(res.errors);
-        // console.log("TESTE")
+        setTimeout(() => {
+          setErrorR('')
+        }, 6000)
       } else {
         // console.log('sem erros')
         setErrorR('');
@@ -65,7 +69,7 @@ const Register = () => {
 
   return (
     <Grid container>
-      {errorR && <p>{errorR}</p>}
+      {errorR && <Toast type='error' message={errorR}/>}
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
         <h2>Crie uma conta</h2>
       </Grid>

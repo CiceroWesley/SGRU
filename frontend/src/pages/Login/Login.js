@@ -2,6 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import {AuthContext} from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
+import Toast from '../../components/Toast/Toast'
+
+
 import { Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 
@@ -49,9 +52,12 @@ const Login = () => {
 
       if(res.errors){
         setError(res.errors);
+        setTimeout(() => {
+          setError('')
+        }, 6000)
       } else {
         setError('');
-        console.log(res);
+        // console.log(res);
         const user = {
           id: res.id,
           username: res.username
@@ -71,7 +77,7 @@ const Login = () => {
 
   return (
     <Grid container>
-      {error && <p>{error}</p>}
+      {error && <Toast type='error' message={error}/>}
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
         <h2>Fazer login</h2>
       </Grid>

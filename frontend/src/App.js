@@ -37,8 +37,7 @@ function App() {
       <AuthContext.Provider value={{authState, setAuthState}}>
         <BrowserRouter>
           <Appbar/>
-          {/* <Navbar/> */}
-          <div style={{minHeight : "70vh"}}>
+          <div style={{minHeight : "66.6vh"}}>
             <Routes>
               <Route path='/' exact element={<Home/>} />
               <Route path='/login' exact element={<Login/>}/>
