@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import Box from "@mui/material/Box";
+import Toast from "../../components/Toast/Toast";
 
 const InsertParticipante = () => {
   const [meetings, setMeetings] = useState([]);
@@ -10,6 +11,11 @@ const InsertParticipante = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [usuario, setUsuario] = useState('');
   const [participantes, setParticipantes] = useState([]);
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
@@ -45,7 +51,12 @@ const InsertParticipante = () => {
           console.log(res.errors);
         } else{
           // console.log(res);
-          setMeetings(res);
+          // setMeetings(res);
+          setMeetings(
+            res.filter((reuniao) => {
+              return reuniao.finalizado !== true;
+            })
+          );
         }
       } catch (error) {
         console.log(error);
@@ -91,11 +102,15 @@ const InsertParticipante = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     // Inserir participante e verificar se meeting e usuario estão nulos
-
+    setLoading(true)
 
     if(meeting === 'disabled'){
-      console.log('Selecione uma reunião.')
-      return
+      setWarning('Selecione uma reunião.')
+      setTimeout(() => {
+        setWarning('')
+      }, 6000);
+      setLoading(false);
+      return;
     }
 
 
@@ -118,7 +133,11 @@ const InsertParticipante = () => {
       .catch((err) => err);
 
       if(res.errors){
-        console.log(res.errors);
+        setError(res.errors)
+        setTimeout(() => {
+          setError('')
+        }, 6000);
+        setLoading(false)
         return;
       } else {
         // console.log(res);
@@ -136,11 +155,16 @@ const InsertParticipante = () => {
         .catch(err => err);
 
         if(res2.errors){
-          console.log(res2.errors);
+          console.log(res2.errors)
+          // setError(res2.errors)
+          // setTimeout(() => {
+          //   setError('')
+          // }, 6000)
         } else {
-          // console.log(res2)
+          // para cada pauta insere o participante nela.
+          let sucesso = true;
           res2.forEach(async (pauta) => {
-            console.log(pauta)
+            // console.log(pauta)
             const votacao = {
               fk_id_participante : res.id,
               fk_id_pauta : pauta.id
@@ -158,25 +182,39 @@ const InsertParticipante = () => {
             .catch(err => err);
 
             if(res3.errors){
-              console.log(res3.errors);
+              setError(res3.errors)
+              setTimeout(() => {
+                setError('')
+              }, 6000);
+              sucesso = false;
             } else {
               console.log(res3);
             }
           });
+          if(sucesso){
+            setSuccess('Participante inserido sucesso.')
+            setTimeout(() => {
+              setSuccess('')
+            }, 6000);
+          }
         }
       }
       
     } catch (error) {
-      console.log(error)
+      setError(error)
+      setTimeout(() => {
+        setError('')
+      }, 6000)
     }
-
-
+    setLoading(false);
   }
-  // console.log(participantes)
-  // console.log(usuarios)
+  
   return (
     <Grid container>
       {/* Antes de inserir os participantes se certificar que todas as pautas foram cadastradas , getUsersByMeeting()*/}
+      {error && <Toast type='error' message={error}/>}
+      {success && <Toast type='success' message={success}/>}
+      {warning && <Toast type='warning' message={warning}/>}
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
         <h2>Inserir participantes</h2>
       </Grid>
@@ -203,7 +241,8 @@ const InsertParticipante = () => {
               </Select>
               <FormHelperText>Selecione um usuário</FormHelperText>
             </FormControl>
-            <TextField  type="submit" value='Inserir participante' color="success"/>
+            {!loading && <TextField type="submit" value='Inserir participante' color="success"/>}
+            {loading && <TextField type="submit" value='Aguarde' disabled color="success"/>}
           </Grid>
         </Box>
       </Grid>

@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 
 // context
 import {AuthContext} from '../../context/AuthContext';
+import Toast from "../../components/Toast/Toast";
 
 
 const CreateMeeting = () => {
@@ -23,6 +24,10 @@ const CreateMeeting = () => {
     const [data, setData] = useState(date1);
     const [local, setLocal] = useState('');
 
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     const user = JSON.parse(localStorage.getItem('user'));
     const navigate = useNavigate();
@@ -37,95 +42,66 @@ const CreateMeeting = () => {
     }, [user, navigate])
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+      e.preventDefault();
+      setLoading(true)
 
-        const dataHorario = `${data} ${hora}:00`;
+      const dataHorario = `${data} ${hora}:00`;
+      // Verificação se a data e horário inseridos não passaram
+      const date = new Date();
+      if(date.getTime() > Date.parse(dataHorario)){
+        setError('Esse horário e/ou data já passaram.')
+        setTimeout(() => {
+          setError('')
+        }, 6000)
+        return;
+      }
 
+      const meeting = {
+          titulo,
+          descricao,
+          data : dataHorario,
+          local
+      };
 
-        // Verificação se a data e horário inseridos não passaram
-        const date = new Date();
-        if(date.getTime() > Date.parse(dataHorario)){
-            console.log('esse horario e data ja passaram')
-            // console.log(date.getTime())
-            // console.log(Date.parse(dataHorario))
-            // SETAR ERRO e RETONAR
-            return;
-        }
- 
-        const meeting = {
-            titulo,
-            descricao,
-            data : dataHorario,
-            local
-        };
-
-        // post request
-        const token = localStorage.getItem('accessToken');
-        let requestOptions = {
-          method: 'POST',
-          headers: {'Content-Type' : 'application/json'},
-          body: JSON.stringify(meeting)
-        };
-        requestOptions.headers.Authorization = `Bearer ${token}`;
-        
-        try {
-          const res = await fetch('http://localhost:3000/api/meeting/', requestOptions)
-          .then((res) => res.json())
-          .catch(err => err);
-
-          if(res.errors){
-            console.log(res.errors);
-          } else{
-            console.log(res);
-            // Inserir o usuário organizador da reunião como participante da reunião.
-            // Pensar outra solução ^
-            try {
-              requestOptions = {
-                method: 'GET',
-                headers: {},
-              };
-              requestOptions.headers.Authorization = `Bearer ${token}`;
-              // getting user
-              const res2 = await fetch('http://localhost:3000/api/users/profile', requestOptions)
-              .then((res2 => res2.json()))
-              .catch((err) => err);
-
-              if(res2.errors){
-                console.log(res2.errors)
-              } else {
-                const participante = {
-                  fk_id_reuniao : res.id,
-                  fk_id_usuario : res2.id
-                };
-                requestOptions = {
-                  method: 'POST',
-                  headers: {'Content-Type' : 'application/json'},
-                  body: JSON.stringify(participante),
-                };
-                requestOptions.headers.Authorization = `Bearer ${token}`;
-                // preciso utilizar o trycatch?
-                // inserindo criador da reunião como participante
-                // const res3 = await fetch('http://localhost:3000/api/meeting/participante', requestOptions)
-                // .then((res3) => res3.json())
-                // .catch((err) => err);
-
-                // if(res3.erros){
-                //   console.log(res3.erros);
-                // } else {
-                //   console.log(res3);
-                // }
-              }
-            } catch (error) {
-              console.log(error)
-            }
-          }
-        } catch (error) {
-          console.log(error);
-        }
+      // post request
+      const token = localStorage.getItem('accessToken');
+      let requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(meeting)
+      };
+      requestOptions.headers.Authorization = `Bearer ${token}`;
       
+      try {
+        const res = await fetch('http://localhost:3000/api/meeting/', requestOptions)
+        .then((res) => res.json())
+        .catch(err => err);
+
+        if(res.errors){
+          // console.log(res.errors);
+          setError(res.errors)
+          setTimeout(() => {
+            setError('')
+          }, 6000)
+        } else{
+          setSuccess('Reunião criada com sucesso.')
+          setTimeout(() => {
+            setSuccess('')
+          }, 6000);
+        }
+      } catch (error) {
+        // console.log(error);
+        setError(error)
+          setTimeout(() => {
+            setError('')
+          }, 6000)
+      }
+      setLoading(false);
     }
   return (
     <Grid container>
+      {error && <Toast type='error' message={error}/>}
+      {success && <Toast type='success' message={success}/>}
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
         <h2>Crie uma reunião</h2>
       </Grid>
@@ -141,7 +117,8 @@ const CreateMeeting = () => {
             <TextField id="outlined-required" label="Data" helperText="Insira a data da reunião" required type="date" onChange={(e) => setData(e.target.value)} value={data}/>
 
             <TextField id="outlined-required" label='Horário' required helperText="Insira o horario da reunião" type="time" onChange={(e) => setHora(e.target.value)} value={hora}/>
-            <TextField  type="submit" value='Criar reunião' color="success"/>
+            {!loading && <TextField  type="submit" value='Criar reunião' color="success"/>}
+            {loading && <TextField  type="submit" value='Aguarde' disabled color="success"/>}
           </Grid>
         </Box>
       </Grid>

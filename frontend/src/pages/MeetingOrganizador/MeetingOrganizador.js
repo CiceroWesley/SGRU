@@ -12,6 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import SubjectIcon from '@mui/icons-material/Subject';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Toast from "../../components/Toast/Toast";
 
 const MeetingOrganizador = () => {
   const {id} = useParams();
@@ -23,6 +24,10 @@ const MeetingOrganizador = () => {
   const [data, setData] = useState('');
   const [hora, setHora] = useState('');
 
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [meeting, setMeeting] = useState();
   const [pautas, setPautas] = useState([]);
@@ -50,16 +55,22 @@ const MeetingOrganizador = () => {
             .catch((err2) => err2);
 
             if(meet.errors){
-              console.log(meet.errors)
-              navigate('/notfound')
-
+              setError(meet.errors);
+              setTimeout(() => {
+                setError('')
+              }, 6000);
+              navigate('/notfound');
+              
             } else {
               const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
               .then((res) => res.json())
               .catch(err => err);
 
               if(res.errors){
-                console.log(res.errors)
+                setError(res.errors);
+                setTimeout(() => {
+                  setError('')
+                }, 6000)
               } else {
                 // verificar reuniões que o usuário está organizando
                 // console.log(typeof res)
@@ -72,14 +83,19 @@ const MeetingOrganizador = () => {
                 });
                 // console.log(res)
                 if(!is){
-                  alert('Você não está organizando essa reunião');
+                  setError('Você não está organizando essa reunião.')
+                  setTimeout(() => {
+                    setError('')
+                  }, 6000);
                   navigate('/menu');
                 }
-
               }
             }
           } catch (error) {
-            console.log(error)
+            setError(error);
+            setTimeout(() => {
+              setError('')
+            }, 6000);
           }
       }
     }
@@ -160,7 +176,10 @@ const MeetingOrganizador = () => {
         if(Number(res) === 1){
           setMeeting({...meeting, finalizado : true})
         } else {
-          console.log('Erro ao finalizar reunião/reunião não existente');
+          setError('Erro ao finalizar reunião/reunião não existente')
+          setTimeout(() => {
+            setError('')
+          }, 6000)
         }
       }
     } catch (error) {
@@ -173,6 +192,7 @@ const MeetingOrganizador = () => {
   // A hora está sendo definida como a hora que o usuário setou + 3, não sei porque.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     // console.log(typeof hora)
     // let novaHora = Number(`${hora[0]}${hora[1]}`)
     // // console.log(novaHora)
@@ -186,10 +206,10 @@ const MeetingOrganizador = () => {
     // Verificação se a data e horário inseridos não passaram
     const date = new Date();
     if(date.getTime() > Date.parse(dataHorario)){
-        console.log('esse horario e data ja passaram')
-        // console.log(date.getTime())
-        // console.log(Date.parse(dataHorario))
-        // SETAR ERRO e RETONAR
+        setError('Esse horário e/ou data já passaram.')
+        setTimeout(() => {
+          setError('')
+        }, 6000)
         return;
     }
 
@@ -215,20 +235,33 @@ const MeetingOrganizador = () => {
       .catch(err => err);
 
       if(res.errors){
-        console.log(res.errors)
+        setError(res.errors)
+        setTimeout(() => {
+          setError('')
+        }, 6000)
       } else {
-        console.log(res)
         if(Number(res) === 1){
-          console.log('Edição realizada com sucesso');
+          setSuccess('Edição realizada com sucesso')
+          setTimeout(() => {
+            setSuccess('')
+          }, 6000);
         } else {
-          console.log('Erro ao editar os dados');
+          // console.log('Erro ao editar os dados');
+          setError('Erro ao editar os dados.')
+          setTimeout(() => {
+            setError('')
+          }, 6000);
         }
       }
 
 
     } catch (error) {
-      console.log(error)
+      setError(error)
+      setTimeout(() => {
+        setError('')
+      }, 6000)
     }
+    setLoading(false);
 
   }
 
@@ -237,9 +270,11 @@ const MeetingOrganizador = () => {
     // console.log(pautaId)
 
     const novoTitulo = prompt('Insira o novo título:')
-    
     if(novoTitulo === '' || novoTitulo === null){
-      console.log('Vázio')
+      setWarning('Você não inseriu um novo nome.')
+      setTimeout(() => {
+        setWarning('')
+      }, 6000);
       return;
     }
     // console.log('teste')
@@ -262,10 +297,16 @@ const MeetingOrganizador = () => {
       .catch(err => err);
 
       if(res.errors){
-        console.log(res.errors)
+        setError(res.errors)
+        setTimeout(() => {
+          setError('')
+        }, 6000)
       } else {
         if(Number(res) === 1){
-          console.log('Pauta atualizada com sucesso');
+          setSuccess('Pauta atualizado com sucesso')
+          setTimeout(() => {
+            setSuccess('')
+          }, 6000);
           // console.log(pautas)
 
           let atualizado = pautas.map((paut) => {
@@ -281,12 +322,21 @@ const MeetingOrganizador = () => {
           // pautasUpdate[pautaAtualizadaId].titulo = novoTitulo;
           // console.log(atualizado)
           setPautas(atualizado);
+        } else {
+          setError('Erro ao editar pauta.')
+          setTimeout(() => {
+            setError('')
+          }, 6000)
         }
       }
 
 
     } catch (error) {
       console.log(error)
+      setError(error)
+      setTimeout(() => {
+        setError('')
+      }, 6000)
     }
     
   }
@@ -294,6 +344,9 @@ const MeetingOrganizador = () => {
   // console.log(pautas)
   return (
     <Grid container>
+      {error && <Toast type='error' message={error}/>}
+      {success && <Toast type='success' message={success}/>}
+      {warning && <Toast type='warning' message={warning}/>}
         {meeting && !meeting.finalizado ? (
           <Grid item container>
             <Grid item container direction='column' alignItems='center' justifyContent='center'>
@@ -311,7 +364,8 @@ const MeetingOrganizador = () => {
                   <TextField id="outlined-required" label="Data" helperText="Insira a data da reunião" required type="date" onChange={(e) => setData(e.target.value)} value={data  || ''}/>
 
                   <TextField id="outlined-required" label='Horário' helperText="Insira o horario da reunião" required type="time" onChange={(e) => setHora(e.target.value)} value={hora  || ''}/>
-                  <TextField  type="submit" value='Editar reunião' color="success"/>
+                  {!loading && <TextField type="submit" value='Editar reunião' color="success"/>}
+                  {loading && <TextField type="submit" value='Aguarde' disabled color="success"/>}
                 </Grid>
               </Box>
             </Grid>

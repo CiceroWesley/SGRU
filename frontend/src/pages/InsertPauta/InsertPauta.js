@@ -3,12 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import Box from "@mui/material/Box";
+import Toast from "../../components/Toast/Toast";
 
 const InsertPauta = () => {
   const [meetings, setMeetings] = useState([]);
   const [meeting, setMeeting] = useState('disabled');
   const [pauta, setPauta] = useState('');
 
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
@@ -40,7 +45,11 @@ const InsertPauta = () => {
           console.log(res.errors);
         } else{
           // console.log(res);
-          setMeetings(res);
+          setMeetings(
+            res.filter((reuniao) => {
+              return reuniao.finalizado !== true;
+            })
+          );
         }
       } catch (error) {
         console.log(error);
@@ -53,10 +62,14 @@ const InsertPauta = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(meeting)
-    console.log(pauta)
+    setLoading(true)
+
     if(meeting === 'disabled'){
-      console.log('selecione uma reunião');
+      setWarning('Selecione uma reunião.')
+      setTimeout(() => {
+        setWarning('')
+      }, 6000);
+      setLoading(false);
       return;
     }
     // verificar se usuários já estão nessa reunião que se deseja cadastrar uma pauta
@@ -67,7 +80,7 @@ const InsertPauta = () => {
       headers: {}
     };
     requestOptions2.headers.Authorization = `Bearer ${token}`;
-
+    // verificação se já existem participantes na reunião
     try {
       const res2 = await fetch(`http://localhost:3000/api/meeting/participantesR/${Number(meeting)}`, requestOptions2)
       .then((res2) => res2.json())
@@ -78,12 +91,19 @@ const InsertPauta = () => {
         return;
       } else {
         if(res2.length > 0){
-          console.log('Se a reunião já possuir pelo menos um participante não se pode mais inserir pautas. Por favor, excluir a reunião e criar outra.');
+          setWarning('Se a reunião já possuir pelo menos um participante, não se pode mais inserir pautas. Por favor, excluir a reunião e criar outra.')
+          setTimeout(() => {
+            setWarning('')
+          }, 6000);
           return;
         }
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
+      setError(error)
+      setTimeout(() => {
+        setError('')
+      }, 6000)
     }
 
     // console.log('passou?')
@@ -107,18 +127,25 @@ const InsertPauta = () => {
       .catch((err) => err);
 
       if(res.errors){
-        // setErrorR(res.errors);
-        console.log(res.errors)
+        setError(res.errors)
+        setTimeout(() => {
+          setError('')
+        }, 6000);
       } else {
         console.log(res)
-        // setErrorR('');
-        // navigate('/login');
+        setSuccess('Pauta inserida com sucesso.')
+        setTimeout(() => {
+          setSuccess('')
+        }, 6000);
       }
 
     } catch (error) {
-      console.log(error);
+      setError(error)
+      setTimeout(() => {
+        setError('')
+      }, 6000)
     }
-
+    setLoading(false);
   }
   // Não é possivel adicionar mais pautas depois de pelo menos um usuário ser adicionado como participante
   // Ao inserir pauta verificar se ja existe um participante (id da reuniao) na reuniao se sim, não deixar inserir outra pauta e pedir para excluir a reunião e criar outra
@@ -127,6 +154,9 @@ const InsertPauta = () => {
   // Inserir um campo resolução para o organizador do encontro e permitir ele adicionar separado da edição da reunião.
   return (
     <Grid container>      
+      {error && <Toast type='error' message={error}/>}
+      {success && <Toast type='success' message={success}/>}
+      {warning && <Toast type='warning' message={warning}/>}
       <Grid item container direction='column' alignItems='center' justifyContent='center'>
         <h2>Inserir pautas</h2>
       </Grid>
@@ -144,7 +174,8 @@ const InsertPauta = () => {
               <FormHelperText>Selecione uma reunião</FormHelperText>
             </FormControl>
             <TextField id="outlined-required" label="Pauta" helperText="Insira o nome da pauta" required type="text" onChange={(e) => setPauta(e.target.value)} value={pauta}/>
-            <TextField  type="submit" value='Inserir pauta' color="success"/>
+            {!loading && <TextField  type="submit" value='Inserir pauta' color="success"/>}
+            {loading && <TextField  type="submit" value='Aguarde' disabled color="success"/>}
           </Grid>
         </Box>
       </Grid>

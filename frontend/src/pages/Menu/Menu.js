@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-import { Grid, Divider } from "@mui/material";
+import { Grid, Divider, CircularProgress } from "@mui/material";
 import BasicCard from "../../components/BasicCard/BasicCard";
 
 
@@ -9,6 +9,9 @@ import BasicCard from "../../components/BasicCard/BasicCard";
 const Menu = () => {
   const [meetings, setMeetings] = useState([]);
   const [meetingsOrg, setMeetingsOrg] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
@@ -24,6 +27,7 @@ const Menu = () => {
 // get meeting by fk_id_reuniao
   useEffect(() => {
     const getMeetings = async() => {
+      setLoading(true);
       const token = localStorage.getItem('accessToken');
       const requestOptions = {
         method : 'GET',
@@ -32,6 +36,7 @@ const Menu = () => {
       requestOptions.headers.Authorization = `Bearer ${token}`;
 
       // var reunioes = [];
+      // requisitar reuniões que o usuário está participando
       try {
         const res = await fetch('http://localhost:3000/api/meeting/participantes', requestOptions)
         .then((res) => res.json())
@@ -41,14 +46,8 @@ const Menu = () => {
           console.log(res.errors);
         } else{
           // console.log(res)
+          // para cada reunião que o usuário estiver como participante, requisitar informações dela.
           res.map(async (reuniao) => {
-            // console.log(reunioes.includes(reuniao.fk_id_reuniao))
-
-            // if(reunioes.includes(reuniao.fk_id_reuniao)){
-            //   console.log('teste')
-            // }
-            // reunioes.push(reuniao.fk_id_reuniao)
-            // console.log(reunioes)
             const res2 = await fetch(`http://localhost:3000/api/meeting/${reuniao.fk_id_reuniao}`, requestOptions)
             .then((res) => res.json())
             .catch((err) => err);
@@ -70,7 +69,7 @@ const Menu = () => {
       } catch (error) {
         console.log(error);
       }
-
+      setLoading(false);
     };
     getMeetings();
   },[]);
@@ -78,6 +77,7 @@ const Menu = () => {
   // get meeting by fk_id_organizador
   useEffect(() => {
     const getMeetingByFkIdOrganizador = async () => {
+      setLoading2(true);
       const token = localStorage.getItem('accessToken');
       const requestOptions = {
         method : 'GET',
@@ -99,6 +99,7 @@ const Menu = () => {
       } catch (error) {
         console.log(error)
       }
+      setLoading2(false);
     };
     getMeetingByFkIdOrganizador();
   },[]);
@@ -158,7 +159,8 @@ const Menu = () => {
           <span>Reuniões que você está participando:</span>
           <div>
             {/* O useEffect está rodando duas vezes, se desativar o Strict Mode resolve. Contudo, não existe outra solução?  */}
-            {meetings && meetings.map((reuniao) => (
+            {loading && <CircularProgress/>}
+            {!loading && meetings && meetings.map((reuniao) => (
               <div style={{marginBottom : '10px'}}>
                 {/* colocar props e exportar funcao de exclusao */}
                 {reuniao.finalizado ? (
@@ -179,7 +181,8 @@ const Menu = () => {
         <Grid item container direction='column' alignItems='center' justifyContent='flex-start' xs={5}>
           <span>Reuniões que você está organizando:</span>
           <div>
-            {meetingsOrg && meetingsOrg.map((reuniaoOrg) => (
+            {loading2 && <CircularProgress/>}
+            {!loading2 && meetingsOrg && meetingsOrg.map((reuniaoOrg) => (
               <div style={{marginBottom : '10px'}}>
                 {reuniaoOrg.finalizado ? (
                   <div>

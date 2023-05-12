@@ -16,6 +16,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Toast from "../../components/Toast/Toast";
 
 const Meeting = () => {
     const {id} = useParams();
@@ -27,6 +28,12 @@ const Meeting = () => {
     const [votacao, setVotacao] = useState([]);
 
     const [pauta, setPauta] = useState();
+
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+
+
 
 
 
@@ -54,15 +61,21 @@ const Meeting = () => {
               .catch((err2) => err2);
 
               if(meet.errors){
-                console.log(meet.errors)
-                navigate('/notfound')
+                setError(meet.errors);
+                setTimeout(() => {
+                  setError('')
+                }, 6000);
+                navigate('/notfound');
               } else {
                 const res = await fetch('http://localhost:3000/api/meeting/participantes', requestOptions)
                 .then((res) => res.json())
                 .catch(err => err);
 
                 if(res.errors){
-                  console.log(res.errors)
+                  setError(res.errors);
+                  setTimeout(() => {
+                    setError('')
+                  }, 6000);
                 } else {
                   // verificar reuniões que o usuário está participando
                   // console.log(typeof res)
@@ -75,13 +88,19 @@ const Meeting = () => {
                   });
                   // console.log(res)
                   if(!is){
-                    alert('Você não pertence a essa reunião');
+                    setError('Você não pertence a essa reunião.')
+                    setTimeout(() => {
+                      setError('')
+                    }, 6000);
                     navigate('/menu');
                   }
                 }
               }
             } catch (error) {
-              console.log(error)
+              setError(error);
+              setTimeout(() => {
+                setError('')
+              }, 6000);
             }
         }
       }
@@ -232,7 +251,10 @@ const Meeting = () => {
         .catch(err => err);
 
         if(res.errors){
-          console.log(res.errors)
+          setError(res.errors)
+          setTimeout(() => {
+            setError('')
+          }, 6000);
         } else {
           if(Number(res) === 1){
             setParticipante({...participante, presente: true})
@@ -249,11 +271,17 @@ const Meeting = () => {
               })
             )
           } else {
-            console.log('Erro ao marcar presença/reunião não existente');
+            setError('Erro ao marcar presença/reunião não existente.')
+            setTimeout(() => {
+              setError('')
+            }, 6000);
           } 
         }
       } catch (error) {
-        console.log(error)
+        setError(error)
+          setTimeout(() => {
+            setError('')
+          }, 6000);
       }
     }
 
@@ -282,12 +310,36 @@ const Meeting = () => {
         .catch(err => err);
 
         if(res.errors){
-          console.log(res.errors);
+          setError(res.errors)
+          setTimeout(() => {
+            setError('')
+          }, 6000);
         } else {
-          console.log(res);
+          if(Number(res) === 1){
+            if(vote === 1){
+              setSuccess('Você votou a favor na pauta');
+              setTimeout(() => {
+                setSuccess('')
+              }, 6000);
+            } else {
+              setSuccess('Você votou contra na pauta');
+              setTimeout(() => {
+                setSuccess('')
+              }, 6000);
+            }
+          } else {
+            setError('Erro ao votar');
+            setTimeout(() => {
+              setError('')
+            }, 6000);
+          }
+          
         }
       } catch (error) {
-        console.log(error)
+        setError(error)
+        setTimeout(() => {
+          setError('')
+        }, 6000);
       }
     }  
 
@@ -385,34 +437,6 @@ const Meeting = () => {
         nameFile = `${meeting.titulo}-${meeting.data}`;
         // console.log(doc.internal.pageSize.getHeight)
       }
-      // Como saber o valor atual da altura para verificar se a página é quebrada ou não?
-      // console.log(doc.internal.pageSize.height)
-      // console.log(doc.internal.pageSize.width)
-      // if(votacao){
-      //   votacao.forEach((pauta) => {
-      //     if(valor > 280){
-      //       doc.addPage("a4", "p");
-      //       valor = 10
-      //     }
-      //     // console.log(pauta.titulo)
-      //     // console.log(value + 40)
-      //     doc.text(pauta.titulo + ` A favor ${pauta.afa}, Contra ${pauta.con}, Abstinência ${pauta.abs}`, 10, valor)
-      //     valor += 10;
-      //   })
-      // }
-
-      // if(participantes){
-      //   participantes.forEach((participante) => {
-      //     if(valor > 280){
-      //       doc.addPage("a4", "p");
-      //       valor = 10
-      //     }
-      //     doc.text(participante.nome + '' + participante.presente, 10, valor);
-      //     valor +=10
-      //   })
-      // }
-      
-      // doc.save(nameFile + ".pdf")
     };
 
     // atentar-se a ordem, criar reunião, inserir pautas e por fim inserir participantes
@@ -430,7 +454,8 @@ const Meeting = () => {
     // console.log(meeting.descricao.length)
     return (
       <div>
-
+        {error && <Toast type='error' message={error}/>}
+        {success && <Toast type='info' message={success}/>}
         <Grid container direction="column" alignItems='center' justifyContent='center'>
           <Grid item container>
             {meeting && 
