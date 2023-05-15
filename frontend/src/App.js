@@ -1,14 +1,13 @@
 import './App.css';
 
 // react router
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 // context
 import { AuthContext } from './context/AuthContext';
-import { useState, useLayoutEffect } from 'react';
+import { useState } from 'react';
 
 // components
-import Navbar from './components/Navbar/Navbar';
 
 import Footer from './components/Footer/Footer';
 

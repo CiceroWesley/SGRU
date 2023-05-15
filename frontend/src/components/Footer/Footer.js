@@ -1,10 +1,12 @@
-import { Container, Divider, Grid, Typography, Link } from "@mui/material"
+import { Container, Divider, Grid, Typography, Link, SvgIcon } from "@mui/material"
 import EmailIcon from '@mui/icons-material/Email';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 
-// import { Link } from "react-router-dom";
+import { Link as LinkD } from "react-router-dom";
+// import SGRUIcon from '../../assets/SGRU.svg';
+import SGRU from '../../assets/SGRU2.png';
 
 const Footer = () => {
   return (
@@ -14,8 +16,10 @@ const Footer = () => {
       
       <Grid container rowSpacing={2}>
         <Grid item container>
-          <Grid item container xs={6}>
-              Logo
+          <Grid item xs={6}>
+            <LinkD to='/'>
+              <img src={SGRU} width={80} alt="Logo do SGRU." />
+            </LinkD>
           </Grid> 
           <Grid item container xs={6}>
           <Typography variant="body2" gutterBottom color='white'>

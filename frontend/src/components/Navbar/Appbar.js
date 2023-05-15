@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
+import SGRU from '../../assets/SGRU2.png';
 
 import { useNavigate } from 'react-router-dom';
 import { Link, NavLink } from 'react-router-dom';
@@ -63,7 +64,8 @@ function Appbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+          <img src={SGRU} width={20} alt="Logo do SGRU." />
           <Typography
             variant="h6"
             noWrap
@@ -120,7 +122,8 @@ function Appbar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+          {/* <img height={100} src={SGRU} alt='Logo do SGRU'/> */}
           <Typography
             variant="h5"
             noWrap
@@ -137,7 +140,7 @@ function Appbar() {
               textDecoration: 'none',
             }}
           >
-            SGRU
+          SGRU
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (

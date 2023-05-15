@@ -27,11 +27,11 @@ const Meeting = () => {
     const [participantes, setParticipantes] = useState([]);
     const [votacao, setVotacao] = useState([]);
 
-    const [pauta, setPauta] = useState();
+    // const [pauta, setPauta] = useState();
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
 
 
@@ -388,56 +388,56 @@ const Meeting = () => {
     }, [pautas, meeting]);
 
     // Como saber o momento de adicionar uma nova página? Já que não há uma função/método que fassa isso
-    const generatePdf = async () => {
-      // 180 e 280
-      // console.log('aqui')
-      const doc = jsPDF();
-      let nameFile;
-      let valor = 10;
-      let data = [];
-      if(meeting && votacao && participantes){
-        // doc.text([meeting.titulo, meeting.data, meeting.local, meeting.descricao, votacao], 10, valor, {maxWidth : 180, align : 'justify'} );
-        nameFile = `${meeting.titulo}-${meeting.data}`;
-        data = [meeting.titulo, meeting.data, meeting.local, meeting.descricao, 'Votação nas pautas:'];
-        valor += 30 + (meeting.descricao.length/180 * 3.5)
-        votacao.forEach((pauta) => {
-          data = [...data,`${pauta.titulo} - a favor: ${pauta.afa}, contra: ${pauta.con}, abstinência: ${pauta.abs}`]
-          valor +=10
-        })
-        data = [...data, 'Participantes:']
-        participantes.forEach((participante) => {
-          if(participante.presente){
-            data = [...data,`${participante.nome}- (presente)` ];
-          } else {
-            data = [...data,`${participante.nome}- (faltou)` ];
-          }
-          valor +=10
+    // const generatePdf = async () => {
+    //   // 180 e 280
+    //   // console.log('aqui')
+    //   const doc = jsPDF();
+    //   let nameFile;
+    //   let valor = 10;
+    //   let data = [];
+    //   if(meeting && votacao && participantes){
+    //     // doc.text([meeting.titulo, meeting.data, meeting.local, meeting.descricao, votacao], 10, valor, {maxWidth : 180, align : 'justify'} );
+    //     nameFile = `${meeting.titulo}-${meeting.data}`;
+    //     data = [meeting.titulo, meeting.data, meeting.local, meeting.descricao, 'Votação nas pautas:'];
+    //     valor += 30 + (meeting.descricao.length/180 * 3.5)
+    //     votacao.forEach((pauta) => {
+    //       data = [...data,`${pauta.titulo} - a favor: ${pauta.afa}, contra: ${pauta.con}, abstinência: ${pauta.abs}`]
+    //       valor +=10
+    //     })
+    //     data = [...data, 'Participantes:']
+    //     participantes.forEach((participante) => {
+    //       if(participante.presente){
+    //         data = [...data,`${participante.nome}- (presente)` ];
+    //       } else {
+    //         data = [...data,`${participante.nome}- (faltou)` ];
+    //       }
+    //       valor +=10
           
-        })
-      }
-      doc.text(data, 10, 10, {maxWidth : 180})
-      // console.log(doc.internal.pageSize.getWidth())
-      // console.log(doc.internal.pageSize.getHeight())
+    //     })
+    //   }
+    //   doc.text(data, 10, 10, {maxWidth : 180})
+    //   // console.log(doc.internal.pageSize.getWidth())
+    //   // console.log(doc.internal.pageSize.getHeight())
       
-      doc.save(nameFile + ".pdf")
-    };
+    //   doc.save(nameFile + ".pdf")
+    // };
 
 
     // Como saber o valor atual da altura para verificar se a página é quebrada ou não?
-    const generatePdf2 = async () => {
-      // 180 e 280
-      console.log('aqui')
-      const doc = jsPDF();
-      console.log(doc.internal.pageSize.height)
-      console.log(doc.internal.pageSize.width)
-      let nameFile;
-      let valor = 10;
-      if(meeting){
-        doc.text([meeting.titulo, meeting.data, meeting.local, meeting.descricao], 10, valor, {maxWidth : 180, align : 'justify'} );
-        nameFile = `${meeting.titulo}-${meeting.data}`;
-        // console.log(doc.internal.pageSize.getHeight)
-      }
-    };
+    // const generatePdf2 = async () => {
+    //   // 180 e 280
+    //   console.log('aqui')
+    //   const doc = jsPDF();
+    //   console.log(doc.internal.pageSize.height)
+    //   console.log(doc.internal.pageSize.width)
+    //   let nameFile;
+    //   let valor = 10;
+    //   if(meeting){
+    //     doc.text([meeting.titulo, meeting.data, meeting.local, meeting.descricao], 10, valor, {maxWidth : 180, align : 'justify'} );
+    //     nameFile = `${meeting.titulo}-${meeting.data}`;
+    //     // console.log(doc.internal.pageSize.getHeight)
+    //   }
+    // };
 
     // atentar-se a ordem, criar reunião, inserir pautas e por fim inserir participantes
 
@@ -490,7 +490,7 @@ const Meeting = () => {
                 <Grid item container direction='column' alignItems='center' justifyContent='center'>
                   {participante && participante.presente ? (
                     pautas && pautas.map((pauta) => (
-                      <Box component="span" margin="2px" sx={{ p: 2, border: '1px solid grey', width: '100%', maxWidth: 300}}>
+                      <Box key={pauta.id} component="span" margin="2px" sx={{ p: 2, border: '1px solid grey', width: '100%', maxWidth: 300}}>
                         <Grid item container direction='column' alignItems='center' justifyContent='center' sx={{maxWidth: 500}}>
                           <Grid item container direction='column' alignItems='center' justifyContent='center' key={pauta.id}><strong>{pauta.titulo}</strong></Grid>
                           <Grid item container directon='row' alignItems='center' justifyContent='center'>
