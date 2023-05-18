@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { jsPDF } from 'jspdf'
+// import { jsPDF } from 'jspdf'
 
-import { Grid, Box, Button, ButtonGroup, Alert, Typography, Divider} from "@mui/material";
+import { Grid, Box, Button, ButtonGroup, Alert, Typography} from "@mui/material";
 import DescriptionIcon from '@mui/icons-material/Description';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -80,12 +80,13 @@ const Meeting = () => {
                   // verificar reuniões que o usuário está participando
                   // console.log(typeof res)
                   let is = false;
-                  // Mudar para forEach
-                  res.map((participandoReuniao) => {
+                  
+                  res.forEach((participandoReuniao) => {
                     if(participandoReuniao.fk_id_reuniao === Number(id)){
                       is = true;
                     }
                   });
+                  // console.log(is)
                   // console.log(res)
                   if(!is){
                     setError('Você não pertence a essa reunião.')
@@ -483,7 +484,7 @@ const Meeting = () => {
             
             {meeting && !meeting.finalizado ? (
               <Grid item container direction='column' alignItems='center' justifyContent='center'>
-                {pautas && pautas.length != 0 && <Grid item contaier>
+                {pautas && pautas.length !== 0 && <Grid item contaier>
                   <h3>Pautas</h3>
                 </Grid>}
                 
@@ -563,7 +564,7 @@ const Meeting = () => {
               {participante &&
                 participante.presente ? (
                   <Grid item container direction='column' alignItems='center' justifyContent='center' marginTop={2}>
-                    <Alert margin severity='info'>Você já marcou sua presença</Alert>
+                    <Alert severity='info'>Você já marcou sua presença</Alert>
                   </Grid>
                 )
                 :
@@ -585,7 +586,7 @@ const Meeting = () => {
                 </Typography>
               </Grid>
               {participantes && participantes.map((participante) => (
-                <Grid item container direction='column' alignItems='center' justifyContent='center' border='1px solid gray'>
+                <Grid key={participante.id} item container direction='column' alignItems='center' justifyContent='center' border='1px solid gray'>
                   {participante.presente ? (
                       <Typography variant="body2" gutterBottom key={participante.id}>
                         {participante.nome}

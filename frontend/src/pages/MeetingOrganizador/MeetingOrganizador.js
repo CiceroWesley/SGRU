@@ -310,9 +310,10 @@ const MeetingOrganizador = () => {
           // console.log(pautas)
 
           let atualizado = pautas.map((paut) => {
-            if(paut.id == pautaId){
-              console.log(paut.titulo)
+            if(paut.id === pautaId){
+              // console.log(paut.titulo)
               paut.titulo = novoTitulo
+              // console.log(paut.titulo)
               return paut
             }
             return paut
@@ -371,7 +372,7 @@ const MeetingOrganizador = () => {
             </Grid>
             <Grid item container direction='column' alignItems='center' justifyContent='center'>
               {/* <Box component="div" sx={{ p: 2, border: '1px dashed grey' }}> */}
-                {pautas && pautas.length!=0 && <List
+                {pautas && pautas.length!==0 && <List
                   sx={{ width: '100%', maxWidth: 360, bgcolor: 'primary', border: '1px solid gray' }}
                   component="nav"
                   aria-labelledby="nested-list-subheader"

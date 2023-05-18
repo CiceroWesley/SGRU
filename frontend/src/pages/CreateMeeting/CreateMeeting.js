@@ -1,16 +1,16 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 
 // context
-import {AuthContext} from '../../context/AuthContext';
+// import {AuthContext} from '../../context/AuthContext';
 import Toast from "../../components/Toast/Toast";
 
 
 const CreateMeeting = () => {
-    const {authState, setAuthState} = useContext(AuthContext);
+    // const {authState, setAuthState} = useContext(AuthContext);
 
     const date1 = new Date().toISOString().slice(0, 10);
     const horario1 = new Date().toLocaleTimeString().slice(0,5);

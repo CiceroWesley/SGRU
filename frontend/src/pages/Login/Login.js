@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect } from "react";
-import {AuthContext} from '../../context/AuthContext';
+import { useState, useEffect } from "react";
+// import {AuthContext} from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
 import Toast from '../../components/Toast/Toast'
@@ -16,7 +16,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   // Context
-  const {AuthState, setAuthState} = useContext(AuthContext);
+  // const {AuthState, setAuthState} = useContext(AuthContext);
 
 
 

@@ -149,7 +149,12 @@ const getParticipanteByFk_Id_Usuario = async (req, res) => {
   // reuniões que o usuário está participando
   const participantes = await Participante.findAll({ where : {fk_id_usuario : user.id}});
   // e se o participantes for vazio?
-  res.status(200).json(participantes);
+  // if(participantes){
+    res.status(200).json(participantes);
+  // } else {
+  //   res.status(404).json({errors: ['Participantes não encontrados.']})
+  // }
+  
 }
 
 // participantes de um reunião
@@ -171,7 +176,13 @@ const getParticipanteByFk_id_ReuniaoAndFk_id_Usuario = async (req, res) => {
   // participante pelo id da reunião e do usuário para verificação de presença e votação
   const participante = await Participante.findOne({where : {fk_id_reuniao : id, fk_id_usuario : reqUser.id}});
 
-  res.status(200).json(participante);
+  // if(participante){
+    res.status(200).json(participante);
+  // }
+  // else {
+  //   res.status(404).json({errors: ['Participante não encontrado.']})
+  // }
+
 }
 
 const insertVotacao = async (req, res) => {

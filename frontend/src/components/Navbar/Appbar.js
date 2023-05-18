@@ -7,16 +7,14 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 
 import SGRU from '../../assets/SGRU2.png';
 
 import { useNavigate } from 'react-router-dom';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AccountCircle } from '@mui/icons-material';
 
 
@@ -114,7 +112,7 @@ function Appbar() {
               }}
             >
               {pages.map((page) => (
-                <Link to={page.to}>
+                <Link to={page.to} key={page.to}>
                   <MenuItem key={page.to} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page.name}</Typography>
                   </MenuItem>
@@ -144,7 +142,7 @@ function Appbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link to={page.to}>
+              <Link key={page.to} to={page.to}>
                 <Button
                   key={page.to}
                   onClick={handleCloseNavMenu}

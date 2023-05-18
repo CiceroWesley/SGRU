@@ -161,7 +161,7 @@ const Menu = () => {
             {/* O useEffect está rodando duas vezes, se desativar o Strict Mode resolve. Contudo, não existe outra solução?  */}
             {loading && <CircularProgress/>}
             {!loading && meetings && meetings.map((reuniao) => (
-              <div style={{marginBottom : '10px'}}>
+              <div style={{marginBottom : '10px'}} key={reuniao.id}>
                 {/* colocar props e exportar funcao de exclusao */}
                 {reuniao.finalizado ? (
                   <BasicCard titulo={reuniao.titulo} finalizado={true} acessar={`/meeting/${reuniao.id}`}/>
@@ -183,7 +183,7 @@ const Menu = () => {
           <div>
             {loading2 && <CircularProgress/>}
             {!loading2 && meetingsOrg && meetingsOrg.map((reuniaoOrg) => (
-              <div style={{marginBottom : '10px'}}>
+              <div style={{marginBottom : '10px'}} key={reuniaoOrg.id}>
                 {reuniaoOrg.finalizado ? (
                   <div>
                     <BasicCard titulo={reuniaoOrg.titulo} finalizado={true} acessar={`/meetingorg/${reuniaoOrg.id}`}/>

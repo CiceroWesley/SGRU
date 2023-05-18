@@ -15,7 +15,14 @@ const authGuard = async (req, res, next) => {
     // verife user by id
     // save the user in req.user
     // Estou passando a senha também, depois fazer a filtragem e verificar os campos
-    req.user = await Usuario.findByPk(verified.id);
+    const user = await Usuario.findByPk(verified.id);
+    if(user){
+      req.user = user;
+    } else {
+      throw new Error('Usuário inválido')
+      res.status(401).json({errors : ['Usuário inválido']});
+    }
+    
 
     // continue the request
     next();

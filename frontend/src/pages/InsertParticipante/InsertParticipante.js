@@ -10,7 +10,7 @@ const InsertParticipante = () => {
   const [meeting, setMeeting] = useState('disabled');
   const [usuarios, setUsuarios] = useState([]);
   const [usuario, setUsuario] = useState('');
-  const [participantes, setParticipantes] = useState([]);
+  // const [participantes, setParticipantes] = useState([]);
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
