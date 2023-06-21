@@ -1,10 +1,11 @@
-# Sistema Gerenciador de Reuniões Universitárias (SGRU)
+# SGRU
+Sistema Gerenciador de Reuniões Universitárias
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/iuricode/README-template?style=for-the-badge)
 
 ![GitHub language count](https://img.shields.io/github/languages/count/iuricode/README-template?style=for-the-badge)
 
-<img src="./images/homePage.PNG" alt="exemplo imagem">
+<img src="./images/homePage.PNG" alt="página inicial">
 
 > O SGRU é um sistema que permite gerenciar reuniões, possuindo o cadastro delas, de pautas e participantes e também a funcionalide de votar em pautas. Ele foi o meu TCC no curso de Cicência da Computação da UFCA.
 
@@ -33,6 +34,6 @@ Acessar o endereço da aplicação via navegador.
 
 ## 📝 Licença
 
-Esse projeto está sob licença. Veja o arquivo [LICENÇA](LICENSE.md) para mais detalhes.
+Esse projeto está sob licença. Veja o arquivo [LICENÇA](LICENSE) para mais detalhes.
 
-[⬆ Voltar ao topo](#SGRU)<br>
+[⬆ Voltar ao topo](#sgru)<br>
