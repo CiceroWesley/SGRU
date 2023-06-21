@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Toast from '../../components/Toast/Toast'
-
+import { api } from "../../utils/config";
 import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import Box from "@mui/material/Box";
 
@@ -46,11 +46,12 @@ const Register = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:3000/api/users/register', requestOptions)
+      const res = await fetch(`${api}/users/register`, requestOptions)
       .then((res) => res.json())
       .catch((err) => err);
 
       if(res.errors){
+        // console.log('erros')
         setErrorR(res.errors);
         setTimeout(() => {
           setErrorR('')
@@ -95,10 +96,6 @@ const Register = () => {
           </Grid>
         </Box>
       </Grid>
-
-
-
-
     </Grid>
   )
 }

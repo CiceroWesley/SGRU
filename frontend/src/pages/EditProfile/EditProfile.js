@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toast from '../../components/Toast/Toast';
+import { api } from '../../utils/config';
 
 const EditProfile = () => {
 
@@ -40,7 +41,7 @@ const EditProfile = () => {
       requestOptions.headers.Authorization = `Bearer ${token}`;
 
       try {
-        const res = await fetch('http://localhost:3000/api/users/profile', requestOptions)
+        const res = await fetch(`${api}/users/profile`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -84,7 +85,7 @@ const EditProfile = () => {
     requestOptions.headers.Authorization = `Bearer ${token}`;
 
     try {
-      const res = await fetch('http://localhost:3000/api/users/edit', requestOptions)
+      const res = await fetch(`${api}/users/edit`, requestOptions)
       .then((res) => res.json())
       .catch(err => err);
 

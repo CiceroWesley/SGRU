@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Grid, Divider, CircularProgress } from "@mui/material";
 import BasicCard from "../../components/BasicCard/BasicCard";
 
+import { api } from "../../utils/config";
+
 
 
 const Menu = () => {
@@ -38,7 +40,7 @@ const Menu = () => {
       // var reunioes = [];
       // requisitar reuniões que o usuário está participando
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/participantes', requestOptions)
+        const res = await fetch(`${api}/meeting/participantes`, requestOptions)
         .then((res) => res.json())
         .catch((err) => err);
         
@@ -48,7 +50,7 @@ const Menu = () => {
           // console.log(res)
           // para cada reunião que o usuário estiver como participante, requisitar informações dela.
           res.map(async (reuniao) => {
-            const res2 = await fetch(`http://localhost:3000/api/meeting/${reuniao.fk_id_reuniao}`, requestOptions)
+            const res2 = await fetch(`${api}/meeting/${reuniao.fk_id_reuniao}`, requestOptions)
             .then((res) => res.json())
             .catch((err) => err);
 
@@ -86,7 +88,7 @@ const Menu = () => {
       requestOptions.headers.Authorization = `Bearer ${token}`;
 
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
+        const res = await fetch(`${api}/meeting/fkIdOrganizador`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -115,7 +117,7 @@ const Menu = () => {
     requestOptions.headers.Authorization = `Bearer ${token}`;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/meeting/${reuniaoId}`, requestOptions)
+      const res = await fetch(`${api}/meeting/${reuniaoId}`, requestOptions)
       .then((res) => res.json())
       .catch(err => err);
 

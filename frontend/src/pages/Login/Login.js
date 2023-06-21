@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Toast from '../../components/Toast/Toast'
+import { api } from "../../utils/config";
 
 
 import { Grid, TextField } from "@mui/material";
@@ -46,7 +47,7 @@ const Login = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:3000/api/users/login', requestOptions)
+      const res = await fetch(`${api}/users/login`, requestOptions)
       .then((res) => res.json())
       .catch((err) => err);
 

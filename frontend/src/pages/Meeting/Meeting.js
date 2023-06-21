@@ -18,6 +18,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Toast from "../../components/Toast/Toast";
 
+import { api } from "../../utils/config";
+
 const Meeting = () => {
     const {id} = useParams();
 
@@ -56,7 +58,7 @@ const Meeting = () => {
             requestOptions.headers.Authorization = `Bearer ${token}`;
             // meetings by current user
             try {
-              const meet = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+              const meet = await fetch(`${api}/meeting/${id}`, requestOptions)
               .then((meet) => meet.json())
               .catch((err2) => err2);
 
@@ -67,7 +69,7 @@ const Meeting = () => {
                 }, 6000);
                 navigate('/notfound');
               } else {
-                const res = await fetch('http://localhost:3000/api/meeting/participantes', requestOptions)
+                const res = await fetch(`${api}/meeting/participantes`, requestOptions)
                 .then((res) => res.json())
                 .catch(err => err);
 
@@ -120,7 +122,7 @@ const Meeting = () => {
 
             // getting meeting
             try {
-                const res = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+                const res = await fetch(`${api}/meeting/${id}`, requestOptions)
                 .then((res) => res.json())
                 .catch((err) => err);
 
@@ -131,7 +133,7 @@ const Meeting = () => {
                     setMeeting(res);
 
                     // getting pautas
-                    const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${res.id}`, requestOptions)
+                    const res2 = await fetch(`${api}/meeting/pautas/${res.id}`, requestOptions)
                     .then((res2) => res2.json())
                     .catch((err) => err);
 
@@ -163,7 +165,7 @@ const Meeting = () => {
         requestOptions.headers.Authorization = `Bearer ${token}`;
         try {
           // usuário atual
-          const res = await fetch(`http://localhost:3000/api/meeting/participanteRU/${id}`, requestOptions)
+          const res = await fetch(`${api}/meeting/participanteRU/${id}`, requestOptions)
           .then((res) => res.json())
           .catch(err => err);
 
@@ -194,7 +196,7 @@ const Meeting = () => {
         };
         requestOptions.headers.Authorization = `Bearer ${token}`;
         try {
-          const res = await fetch(`http://localhost:3000/api/meeting/participantesR/${id}`, requestOptions)
+          const res = await fetch(`${api}/meeting/participantesR/${id}`, requestOptions)
           .then((res) => res.json())
           .catch(err => err);
 
@@ -204,7 +206,7 @@ const Meeting = () => {
             // console.log(res);
             res.forEach(async (participante) => {
               // console.log(participante)
-              const res2 = await fetch(`http://localhost:3000/api/users/usuario/${participante.fk_id_usuario}`, requestOptions)
+              const res2 = await fetch(`${api}/users/usuario/${participante.fk_id_usuario}`, requestOptions)
               .then((res2) => res2.json())
               .catch(err => err);
 
@@ -247,7 +249,7 @@ const Meeting = () => {
       };
       requestOptions.headers.Authorization = `Bearer ${token}`;
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/markpresence', requestOptions)
+        const res = await fetch(`${api}/meeting/markpresence`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -306,7 +308,7 @@ const Meeting = () => {
       requestOptions.headers.Authorization = `Bearer ${token}`;
 
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/vote', requestOptions)
+        const res = await fetch(`${api}/meeting/vote`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -355,7 +357,7 @@ const Meeting = () => {
         requestOptions.headers.Authorization = `Bearer ${token}`;
         try {
           pautas.forEach(async (pauta) => {
-            const res = await fetch(`http://localhost:3000/api/meeting/votes/${pauta.id}`, requestOptions)
+            const res = await fetch(`${api}/meeting/votes/${pauta.id}`, requestOptions)
             .then((res) => res.json())
             .catch(err => err);
 

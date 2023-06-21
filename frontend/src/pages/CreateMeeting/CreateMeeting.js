@@ -8,6 +8,8 @@ import Box from "@mui/material/Box";
 // import {AuthContext} from '../../context/AuthContext';
 import Toast from "../../components/Toast/Toast";
 
+import { api } from "../../utils/config";
+
 
 const CreateMeeting = () => {
     // const {authState, setAuthState} = useContext(AuthContext);
@@ -73,7 +75,7 @@ const CreateMeeting = () => {
       requestOptions.headers.Authorization = `Bearer ${token}`;
       
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/', requestOptions)
+        const res = await fetch(`${api}/meeting/`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 

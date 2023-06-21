@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toast from "../../components/Toast/Toast";
+import { api } from "../../utils/config";
 
 const InsertParticipante = () => {
   const [meetings, setMeetings] = useState([]);
@@ -43,7 +44,7 @@ const InsertParticipante = () => {
       };
       requestOptions.headers.Authorization = `Bearer ${token}`;
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
+        const res = await fetch(`${api}/meeting/fkIdOrganizador`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -80,7 +81,7 @@ const InsertParticipante = () => {
       // console.log(meeting)
       try {
         // o procedimento que está rota da api faz dava para ter sido feito aqui, bastava procurar os participantes pelo id da reunião e em seguida filtrar de todos os usuários (da rota que requisita os usuários gerais)
-        const res = await fetch(`http://localhost:3000/api/meeting/getusersfilter/${meeting}`, requestOptions)
+        const res = await fetch(`${api}/meeting/getusersfilter/${meeting}`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -128,7 +129,7 @@ const InsertParticipante = () => {
     };
     requestOptions.headers.Authorization = `Bearer ${token}`;
     try {
-      const res = await fetch('http://localhost:3000/api/meeting/participante', requestOptions)
+      const res = await fetch(`${api}/meeting/participante`, requestOptions)
       .then((res) => res.json())
       .catch((err) => err);
 
@@ -150,7 +151,7 @@ const InsertParticipante = () => {
         };
         requestOptions.headers.Authorization = `Bearer ${token}`;
         // pautas
-        const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${meeting}`, requestOptions)
+        const res2 = await fetch(`${api}/meeting/pautas/${meeting}`, requestOptions)
         .then((res2) => res2.json())
         .catch(err => err);
 
@@ -177,7 +178,7 @@ const InsertParticipante = () => {
             };
             requestOptions.headers.Authorization = `Bearer ${token}`;
 
-            const res3 = await fetch('http://localhost:3000/api/meeting/votacao', requestOptions)
+            const res3 = await fetch(`${api}/meeting/votacao`, requestOptions)
             .then((res3) => res3.json())
             .catch(err => err);
 

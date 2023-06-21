@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Grid, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toast from "../../components/Toast/Toast";
+import { api } from "../../utils/config";
 
 const InsertPauta = () => {
   const [meetings, setMeetings] = useState([]);
@@ -37,7 +38,7 @@ const InsertPauta = () => {
       };
       requestOptions.headers.Authorization = `Bearer ${token}`;
       try {
-        const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
+        const res = await fetch(`${api}/meeting/fkIdOrganizador`, requestOptions)
         .then((res) => res.json())
         .catch(err => err);
 
@@ -82,7 +83,7 @@ const InsertPauta = () => {
     requestOptions2.headers.Authorization = `Bearer ${token}`;
     // verificação se já existem participantes na reunião
     try {
-      const res2 = await fetch(`http://localhost:3000/api/meeting/participantesR/${Number(meeting)}`, requestOptions2)
+      const res2 = await fetch(`${api}/meeting/participantesR/${Number(meeting)}`, requestOptions2)
       .then((res2) => res2.json())
       .catch(err => err);
 
@@ -122,7 +123,7 @@ const InsertPauta = () => {
     };
     requestOptions.headers.Authorization = `Bearer ${token}`;
     try {
-      const res = await fetch('http://localhost:3000/api/meeting/pauta', requestOptions)
+      const res = await fetch(`${api}/meeting/pauta`, requestOptions)
       .then((res) => res.json())
       .catch((err) => err);
 

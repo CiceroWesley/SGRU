@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // solve cors
-app.use(cors({ credentials: true, origin: 'http://localhost:3001' }));
+app.use(cors({origin: 'http://localhost:13001', credentials: true}));
 
 // synchronizing database
 const syncDB = async () => {

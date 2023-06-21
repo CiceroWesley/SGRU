@@ -14,6 +14,8 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Toast from "../../components/Toast/Toast";
 
+import { api } from "../../utils/config";
+
 const MeetingOrganizador = () => {
   const {id} = useParams();
 
@@ -50,7 +52,7 @@ const MeetingOrganizador = () => {
           requestOptions.headers.Authorization = `Bearer ${token}`;
           // meetings by current user
           try {
-            const meet = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+            const meet = await fetch(`${api}/meeting/${id}`, requestOptions)
             .then((meet) => meet.json())
             .catch((err2) => err2);
 
@@ -62,7 +64,7 @@ const MeetingOrganizador = () => {
               navigate('/notfound');
               
             } else {
-              const res = await fetch('http://localhost:3000/api/meeting/fkIdOrganizador', requestOptions)
+              const res = await fetch(`${api}/meeting/fkIdOrganizador`, requestOptions)
               .then((res) => res.json())
               .catch(err => err);
 
@@ -114,7 +116,7 @@ const MeetingOrganizador = () => {
 
         // getting meeting
         try {
-            const res = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+            const res = await fetch(`${api}/meeting/${id}`, requestOptions)
             .then((res) => res.json())
             .catch((err) => err);
 
@@ -132,7 +134,7 @@ const MeetingOrganizador = () => {
                 
 
               // getting pautas
-              const res2 = await fetch(`http://localhost:3000/api/meeting/pautas/${res.id}`, requestOptions)
+              const res2 = await fetch(`${api}/meeting/pautas/${res.id}`, requestOptions)
               .then((res2) => res2.json())
               .catch((err) => err);
 
@@ -165,7 +167,7 @@ const MeetingOrganizador = () => {
     requestOptions.headers.Authorization = `Bearer ${token}`;
 
     try {
-      const res = await fetch('http://localhost:3000/api/meeting/finalize', requestOptions)
+      const res = await fetch(`${api}/meeting/finalize`, requestOptions)
       .then((res) => res.json())
       .catch(err => err);
 
@@ -230,7 +232,7 @@ const MeetingOrganizador = () => {
     requestOptions.headers.Authorization = `Bearer ${token}`;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/meeting/${id}`, requestOptions)
+      const res = await fetch(`${api}/meeting/${id}`, requestOptions)
       .then((res) => res.json())
       .catch(err => err);
 
@@ -292,7 +294,7 @@ const MeetingOrganizador = () => {
     requestOptions.headers.Authorization = `Bearer ${token}`;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/meeting/pauta/${pautaId}`, requestOptions)
+      const res = await fetch(`${api}/meeting/pauta/${pautaId}`, requestOptions)
       .then((res) => res.json())
       .catch(err => err);
 

@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+  
+  sgruDB:
+    container_name: sgruDB
+    platform: linux/amd64 #for platform error on Apple M1 chips
+    restart: unless-stopped
+    image: mariadb:10.6
+    environment:
+      MARIADB_USER: reuniao
+      MARIADB_ROOT_PASSWORD: Ft9ycyAeRZDu3zGwg
+      MARIADB_PASSWORD: w3QCRUZDnqWcwataj
+      MARIADB_DATABASE: reuniao
+    volumes:
+      #- strapi-data:/var/lib/mysql
+      - ./data:/var/lib/mysql # if you want to use a bind folder
+    ports:
+      - '3306:3306'
+    networks:
+      - sgru
+
+  backend:
+    build: .
+    image: node:18-sgru
+    container_name: sgru_backend
+    restart: always
+    #env_file: .env
+    depends_on:
+      - "sgruDB"
+    ports:
+      - "13000:3000"
+    command: "sh iniciar.server.sh"
+    labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.sgru_backend.rule=(Host(`sci03-ter-jne.ufca.edu.br`) && PathPrefix(`/ufcavegs`))"
+       - "traefik.http.routers.sgru_backend.tls=true"
+       - "traefik.http.routers.sgru_backend.tls.certresolver=certificado"
+       - "traefik.http.routers.sgru_backend.entrypoints=websecure"
+       #- "traefik.http.routers.backdocs.middlewares=autodocs-stripprefix"
+       #- "traefik.http.middlewares.autodocs-stripprefix.stripprefix.prefixes=/backdocs"
+    volumes:
+      - ./backend:/home/node/app
+    networks:
+      - sgru
+  
+  frontend:
+    image: node:18-sgru
+    container_name: sgru_frontend
+    restart: always
+    #env_file: .env
+    depends_on:
+      - "backend"
+    ports:
+      - "13001:3000"
+    command: "sh iniciar.client.sh"
+    labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.sgru_frontend.rule=(Host(`sci03-ter-jne.ufca.edu.br`) && PathPrefix(`/`))"       
+       - "traefik.http.routers.sgru_frontend.tls=true"
+       - "traefik.http.routers.sgru_frontend.tls.certresolver=certificado"
+       - "traefik.http.routers.sgru_frontend.entrypoints=websecure"
+    volumes:
+      - ./frontend:/home/node/app
+    networks:
+      - sgru
+
+networks:
+  sgru:
+    external: true
