@@ -10,7 +10,7 @@ Sistema Gerenciador de Reuniões Universitárias
 
 <img src="./images/homePage.PNG" alt="página inicial">
 
-> O SGRU é um sistema que permite gerenciar reuniões, possuindo o cadastro delas, de pautas e participantes e também a funcionalide de votar em pautas. Ele foi o meu TCC no curso de Cicência da Computação da UFCA.
+> O SGRU é um sistema que permite gerenciar reuniões, possuindo o cadastro delas, de pautas e participantes e também a funcionalidade de votar em pautas. Ele foi o meu TCC no curso de Ciência da Computação da UFCA.
 
 ## 💻 Pré-requisitos
 
